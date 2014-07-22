@@ -7,7 +7,7 @@
 /* *** Objective: Merge CRSP Stock and Events data     */
 /*******************************************************/
 
-%macro CRSP_MERGE (s=m,
+%macro CRSP_MERGE(s=m,
       start=31DEC1925,end=31DEC2013,
       sfvars=,sevars=,
       filters=,
@@ -43,7 +43,7 @@ options nonotes;
   %else %let filters = %str( );
 %if &final_ds = %str() %then %let final_ds = &outlib..crsp_&s.;
 
-%put #### ### ## # ;
+%put #;
 /* Get stock data */
 proc sql;
         create table _sfdata
@@ -55,7 +55,7 @@ proc sql;
          keep=permno namedt nameendt) )
         order by permno, date;
         quit;
-%put #### ### ## # ;
+%put ##;
 /* Get event data */
 proc sql;
    create table _sedata
@@ -67,7 +67,7 @@ proc sql;
         where a.date >= b.minnamedt and a.date <= &edate and a.permno =b.permno
    order by a.permno, a.date;
    quit;
-%put #### ### ## # ;
+%put ###;
 /* Merge stock and event data */
 %let eventvars = ticker comnam ncusip shrout siccd exchcd shrcls shrcd shrflg trtscd nmsind mmcnt nsdinx;
 * variables whose values need to be retain to fill the blanks;
@@ -86,8 +86,9 @@ by permno date; retain &sevars_l;
  %end;
 if eventdata and not stockdata then delete;
 drop  &sevars_l ;
+format date yymmdd10.;
 run;
-%put #### ### ## # ;
+%put ####;
     /* ------------------------------------------------------------------------------ */
     /* The following sort is included to handle duplicate observations when a company */
     /* has more than one distribution on a given date. For example, a stock and cash  */
@@ -105,19 +106,20 @@ proc sort data=_merge noduplicates;
 where 1 &filters;
     by date permno;
 run;
-%put #### ### ## # ;
+%put #####;
 
 proc sql;
-  create table &final_ds. as
+  create table &final_ds.(drop=dlret) as
   select a.*,
     abs(prc*shrout) as ME label='Market Equity',
     (1+ret)*sum(1,dlret)-1 as RET_ADJ label='Returns adjusted for delisting',
-    b.cdate label='CRSP Date (int)'
+    b.CDATE label='CRSP Date (int)'
     from _merge a,
     (select caldt, monotonic() as CDATE from crsp.&s.siy) b
     where a.date = b.caldt
     ;
 quit;
+%put ######;
 
 %if %SUBSTR(%LOWCASE(&debug),1,1) = n %then %do;
 proc sql;
@@ -126,11 +128,10 @@ quit;
 %end;
 
 options notes;
-%put #### ## # Done: Dataset &final_ds Created! # ## ####;
+%put ####### Done: Dataset &final_ds Created! #######;
 %put ;
 
 %mend CRSP_MERGE;
-
 
 /* ***************************************************************************************** */
 /* ***************************** Unless otherwise noted, *********************************** */
