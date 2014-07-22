@@ -47,7 +47,7 @@ libname pgdb postgres server=&server. port=&port.
 
 * Make a temp dataset with the correct data environment
    and format columns to bulk load into Postgre;
-data _data_f / view = _data_f;
+data _data_f;
     set &lib..&dsetin.;
     &format.
     &rename.
@@ -65,7 +65,7 @@ proc sql dquote=ansi;
         )
     as select * from _data_f;
 
-    drop view _data_f;
+    drop table _data_f;
 
 quit;
 * Close session;
