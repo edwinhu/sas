@@ -6,7 +6,7 @@ Date: 2013-05-24
 
 ## Summary ##
 Gets quarterly earnings announcement dates from COMPUSTAT and
-fetches CRSP PERMNOs. Makes a file `comp_ead`.
+fetches CRSP PERMNOs. Makes a file `comp_ead_events`.
 
 ## Variables ##
 - comp_vars: list of COMPUSTAT variables to fetch
@@ -25,7 +25,7 @@ fetches CRSP PERMNOs. Makes a file `comp_ead`.
                         filter=not missing(saleq) or atq>0
                         );
 
-* Now do stuff with comp_ead file ;
+* Now do stuff with comp_ead_events file ;
 ```
 */
 
