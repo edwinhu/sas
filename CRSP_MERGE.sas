@@ -1,11 +1,42 @@
-/* *************************************************** */
-/* ************** W R D S   M A C R O S ************** */
-/* ***************  Merging CRSP Data  *************** */
-/* *************************************************** */
-/* *** Date: May, 2009                                 */
-/* ***   By: Rabih Moussawi, Luis Palacios, WRDS       */
-/* *** Objective: Merge CRSP Stock and Events data     */
-/*******************************************************/
+/*
+Author: Edwin Hu
+Date: 2013-05-24
+
+# CRSP_MERGE #
+
+## Summary ##
+Basic ETL script for CRSP data.
+
+Merges CRSP daily or monthly with corresponding events and names files.
+
+Also computes market equity and delisting adjusted returns following Shumway (1997).
+
+Adapted from Rabih Moussawi, Luis Palacios WRDS.
+
+## Variables ##
+- s: frequency (d,m)
+- start: 31DEC1925
+- end: 31DEC2013
+- sfvars: variables to grab from stock files
+- sevars: variables to grab from event files
+- filters: additional filters `(shrcd in (10,11) and exchcd in (1,2,3))`
+- outlib: output library, default `user`
+- final_ds: output dataset name, if not set defaults to `&outlib..crsp_&s.`
+- debug: debug mode (keep or delete temporary files)
+
+## Usage ##
+```
+%IMPORT "~/git/sas/CRSP_MERGE.sas";
+
+%CRSP_MERGE(s=m,
+      start=31DEC1925,end=31DEC2013,
+      sfvars=vol,sevars=,
+      filters=shrcd in (10,11) and exchcd in (1,2,3),
+      outlib=user,final_ds=crsp_m,
+      debug=n);
+
+```
+*/
 
 %macro CRSP_MERGE(s=m,
       start=31DEC1925,end=31DEC2013,
@@ -132,13 +163,3 @@ options notes;
 %put ;
 
 %mend CRSP_MERGE;
-
-/* ***************************************************************************************** */
-/* ***************************** Unless otherwise noted, *********************************** */
-/* All material is Copyright 1994-2009: The Wharton School of the University of Pennsylvania */
-/* ****************************** All rights reserved ************************************** */
-
-
-/*
-%crspmerge (s=M,start=01Jan2011,end=01Feb2011,sfvars=,sevars=,filters=,final_ds=);
-*/

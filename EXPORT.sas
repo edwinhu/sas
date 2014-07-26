@@ -1,18 +1,41 @@
+/*
+Author: Edwin Hu
+Date: 2013-05-24
+
+# EXPORT #
+
+## Summary ##
+Exports SAS Datasets to a variety of formats (.csv, .tsv, .dta, .xls, .xlsx)
+and also exports the column descriptions to make it easy to port tables to
+other data storage format.
+
+## Variables ##
+- lib: library where SAS file is located
+- dsetin: SAS file to export
+- dir: path to export file to (do not use quotes)
+- outfile: name of file to create (do not include suffix)
+- dbms: file format (e.g. .csv)
+- format: manually set column formats using DATA Step format syntax
+- debug: keep or delete temporary files
+
+## Usage ##
+```
+%IMPORT "~/git/sas/EXPORT.sas";
+
+%EXPORT(lib=user,dsetin=&syslast.,
+                dir=/path/to/output/file,outfile=outfile,
+                dbms=csv,
+                format=,
+                debug=n);
+
+```
+ */
+
 %MACRO EXPORT(lib=,dsetin=,
    dir=,outfile=,
    dbms=csv,
    format=,
    debug=n);
-
-/* 
-
-lib : input library
-dsetin : input dataset
-dir : output directory
-outfile: output filename
-format : output format (default csv)
-
-*/
 
 /* Summarize dataset metadata */
 proc sql;
@@ -107,19 +130,3 @@ run;
 %end;
 
 %MEND;
-
-/**
-
-* Sends the resulting spreadsheet from Unix to my inbox ;
-data _null_;
-   file sendit email
-      to="eddyhu@gmail.com" 
-      subject="Resulting Excel spreadsheet"
-      attach=(
-      "~/data_dictionary.xls"
-      content_type="application/excel"
-      );
-   put "Attached is the Excel spreadsheet with the metadata for sashelp.demographics";
-run;
-
-**/

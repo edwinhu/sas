@@ -1,37 +1,44 @@
-****************(1) MODULE-BUILDING STEP********************************;
-/*******************READ ME*********************************************
-* - Macro to resample and forward-fill data from low to high frequency -
-*
-* SAS VERSION:    9.4.0
-* DATE:           2014-02-21
-* AUTHOR:         eddyhu at the gmails
-*
-****************END OF READ ME******************************************/
+/*
+Author: Edwin Hu
+Date: 2013-05-24
 
-%macro RESAMPLE(lib = USER, 
-                dsetin = &syslast., 
-                dsetout = , 
-                datevar = datadate, 
+# RESAMPLE #
+
+## Summary ##
+Resample and forward-fill data from low to high frequency
+
+Commonly used to sample low frequency COMPUSTAT data before merging
+with higher frequency CRSP data.
+
+## Variables ##
+- lib: input dataset library
+- dsetin: input dataset
+- dsetout: output (resampled) dataset
+- datevar: date variable to resample
+- idvar: group by id variable
+- infreq: input frequency
+- outfreq: output (higher) frequency
+- alignment: date alignment (E,S,B)
+- debug: keep or delete temporary datasets
+
+## Usage ##
+```
+%IMPORT "~/git/sas/RESAMPLE.sas";
+
+%RESAMPLE(lib=sashelp, dsetin=citiyr, outfreq=monthly, idvar=, datevar=date);
+
+```
+ */
+%macro RESAMPLE(lib = USER,
+                dsetin = &syslast.,
+                dsetout = ,
+                datevar = datadate,
                 idvar = gvkey,
-                infreq = yearly, 
+                infreq = yearly,
                 outfreq = monthly,
                 alignment = E,
                 debug = n
                 );
-
-   /*****************************************************************
-   *  MACRO:      RESAMPLE()
-   *  GOAL:       Resample and forward-fill data from low to high frequency
-   *  PARAMETERS: lib     = SAS library (default USER)
-   *              dsetin      = SAS dataset to resample (default &syslast)
-   *              dsetout     = output resampled dataset (default &dsetin._resampled)
-   *              datevar     = date variable (default COMPUSTAT datadate)
-   *              idvar       = id variable (default COMPUSTAT gvkey)
-   *              infreq      = input dataset frequency (default yearly)
-   *              outfreq     = output dataset frequency (default month)
-   *              alignment   = output date alignment (default END)
-   *              debug       = if y then keep temporary files
-   *****************************************************************/
 
     %if %length(&dsetout) < 1 %then %do;
         %let dsetout = &dsetin._&outfreq. ;
@@ -51,7 +58,7 @@
     data &lib.._RESAMPLE_DIFF;
         set &lib.._RESAMPLE_DIFF;
         &datevar._diff = min(
-                intck(&outfreq.,&datevar.,intnx(&infreq.,&datevar.,1,'S')), 
+                intck(&outfreq.,&datevar.,intnx(&infreq.,&datevar.,1,'S')),
                 intck(&outfreq.,&datevar.,intnx(&outfreq.,&datevar._next,0,'E'))
                 );
                 * Example: yearly -> monthly
@@ -78,23 +85,3 @@
     %end;
 
 %mend RESAMPLE;
-
-****************(2) TESTING STEP****************************************;
-%macro test(debug=n);
-%if %SUBSTR(%LOWCASE(&debug),1,1) = y %then %do;
-    * Resample the yearly city data;
-    %resample(lib=sashelp, dsetin=citiyr, outfreq=monthly, idvar=, datevar=date);
-    * Shift the date forward by 6 months;
-    data sashelp.citiyr_monthly;
-        set sashelp.citiyr_monthly;
-        retain date_avail;
-        date_avail = intnx('monthly',date,6,'e');    
-        format date_avail yymmdd10.;
-        label date_avail='Date Available';
-    run;
-%end;
-%mend test;
-
-%test(debug=n);
-
-*'; *"; *); */; %mend; run;

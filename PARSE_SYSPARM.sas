@@ -1,11 +1,29 @@
- /*    name: parse-sysparm.sas
-description: parse the text in option sysparm into macro variables
-    purpose: support batch processing command-line parameter passing
-;/* testing in program ****** **
-options source2;%* for put _global_;
-options sysparm = 'a=1;b=2;d=4';
-;/***** ********************* */
- 
+/*
+Author: Edwin Hu
+Date: 2013-05-24
+
+# PARSE_SYSPARM #
+
+## Summary ##
+Parses &sysparm. macro variable to make it easier to pass variables to SAS programs.
+
+`sas myprog.sas -sysparm a=1;b=2;c=3;`
+
+will parse to something like
+
+```
+%let a = 1;
+%let b = 2;
+%let c = 3;
+```
+
+## Usage ##
+```
+%IMPORT "~/git/sas/PARSE_SYSPARM.sas";
+
+```
+*/
+
 data _null_;
      attrib Stmnt   length = $132
             Testing length =    4;

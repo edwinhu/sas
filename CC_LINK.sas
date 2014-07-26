@@ -1,20 +1,37 @@
-/* ***************************************************************************/
-/* Macro: CC_LINK                                                            */
-/* Summary   : Links COMPUSTAT GVKEYs to CRSP PERMNOs                        */
-/* Date      : 2013/05/24                                                    */
-/* Author    : Edwin Hu                                                      */
-/* Variables : - dsetin: Input Dataset Name                                  */
-/*             - dsetout: Output Dataset Name, default compx                 */
-/*             - datevar: date variable to use (datadate, rdq)               */
-/*             - keep_vars: variables to keep                                */
-/* ***************************************************************************/
+/*
+Author: Edwin Hu
+Date: 2013-05-24
 
-%MACRO CC_LINK(
-                dsetin=,
-                dsetout=compx,
-                datevar=datadate,
-                keep_vars=
-                );
+# CC_LINK #
+
+## Summary ##
+Links COMPUSTAT GVKEYs to CRSP PERMNOs.
+
+Takes a file which contains GVKEYs and dates and merges in the
+appropriate PERMNOs. This handles a lot of silly merge issues.
+
+## Variables ##
+- dsetin: Input Dataset
+- dsetout: Output Dataset Name, default compx
+- datevar: date variable to use (datadate, rdq)
+- keep_vars: variables to keep
+
+## Usage ##
+```
+%IMPORT "~/git/sas/CC_LINK.sas";
+
+%CC_LINK(dsetin=&syslast.,
+                 dsetout=compx,
+         datevar=datadate,
+         keep_vars=);
+```
+*/
+
+%MACRO CC_LINK(dsetin=&syslast.,
+               dsetout=compx,
+               datevar=datadate,
+               keep_vars=
+               );
 
 OPTIONS NONOTES;
 
