@@ -41,9 +41,9 @@ fetches CRSP PERMNOs. Makes a file `comp_ead_events`.
     %put;%put Merging comp.fundq with CCM linking table;
         proc sql;
                 drop table comp_ead;
-                drop view _comp_ead, _ead;
+                drop table _comp_ead, _ead;
 
-            create view _comp_ead as
+            create table _comp_ead as
             select a.gvkey, a.datadate, a.rdq,
                     b.lpermno as permno, b.lpermco as permco,
                 /*Compustat variables*/
@@ -63,7 +63,7 @@ fetches CRSP PERMNOs. Makes a file `comp_ead_events`.
             and a.rdq IS NOT NULL
             ;
 
-            create view _ead as
+            create table _ead as
             select a.*, b.date as rdq_adj
                 format=yymmdd10. label='Adjusted Report Date of Quarterly Earnings'
             from (select distinct rdq from _comp_ead) a
@@ -73,7 +73,7 @@ fetches CRSP PERMNOs. Makes a file `comp_ead_events`.
         having b.date-a.rdq=min(b.date-a.rdq)
         ;
 
-        create view _comp_ead_events
+        create table _comp_ead_events
                 (keep=gvkey datadate rdq rdq_adj
                 permno permco event_id mcap prccq &comp_vars.) as
         select a.*, b.rdq_adj
@@ -96,7 +96,7 @@ fetches CRSP PERMNOs. Makes a file `comp_ead_events`.
         run;
 
     proc sql;
-        drop view _comp_ead_events, _comp_ead, _ead;
+        drop table _comp_ead_events, _comp_ead, _ead;
         quit;
 
     %put;%put COMP_EAD created;
