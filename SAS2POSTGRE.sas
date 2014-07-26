@@ -43,7 +43,7 @@
 
 * Connection string;
 libname pgdb postgres server=&server. port=&port.
-   user=&user. password=&pass. database=&db. autocommit=yes;
+   user=&user. password=&pass. database=&db. autocommit=no;
 
 * Make a temp dataset with the correct data environment
    and format columns to bulk load into Postgre;
