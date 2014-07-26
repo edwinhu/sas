@@ -38,7 +38,7 @@ fetches CRSP PERMNOs. Makes a file `comp_ead_events`.
                         filter=not missing(saleq) or atq>0
                         );
 
-    %put;%put; Merging comp.fundq with CCM linking table;
+    %put;%put Merging comp.fundq with CCM linking table;
         proc sql;
                 drop table comp_ead;
                 drop view _comp_ead, _ead;
@@ -83,7 +83,7 @@ fetches CRSP PERMNOs. Makes a file `comp_ead_events`.
         ;
     quit;
 
-   %put;%put; Checking for duplicates and outputting;
+   %put;%put Checking for duplicates and outputting;
         proc sort data=_comp_ead_events
                 out=comp_ead_events nodupkey;
                 by permno rdq_adj;
@@ -99,5 +99,5 @@ fetches CRSP PERMNOs. Makes a file `comp_ead_events`.
         drop view _comp_ead_events, _comp_ead, _ead;
         quit;
 
-    %put;%put; COMP_EAD created;
+    %put;%put COMP_EAD created;
 %MEND COMP_EAD;
