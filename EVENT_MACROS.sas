@@ -215,13 +215,6 @@ A collection of event study macros adapted from WRDS.
         by event_id t;
     run;
 
-    data &prefix._expand;
-        set &prefix._expand;
-        by event_id;
-        me_l1 = lag(me);
-    run;
-    %put ### DONE! ###;
-
     %if %substr(%lowcase(&debug),1,1) = n %then %do;
     proc datasets noprint;
         delete _temp:;
