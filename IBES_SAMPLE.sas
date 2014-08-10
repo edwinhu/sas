@@ -1,6 +1,42 @@
+/*
+Author: Edwin Hu
+Date: 2013-05-24
+
+# IBES_SAMPLE #
+
+## Summary ##
+Gets the median analyst forecasts from IBES
+
+## Variables ##
+- itickers: dataset with IBES ticker list (iclink)
+- suffix: which ibes files to use (epsus)
+- det_filter: detail file filters
+- act_filter: actual file filters
+- ibes_var: IBES variables to keep
+- debug: debug mode
+
+## Usage ##
+```
+%IMPORT "~/git/sas/IBES_SAMPLE.sas";
+
+%IBES_SAMPLE(
+             itickers=iclink,
+             suffix=epsus,
+             begindate=,
+             enddate=,
+             det_filter=measure='EPS' and fpi in ('6','7') and &begindate<=fpedats<=&enddate,
+             act_filter=missing(repdats)=0 and missing(anndats)=0 and 0<intck('day',anndats,repdats)<=90,
+             ibes_vars=ticker value fpedats anndats revdats measure fpi estimator analys pdf usfirm,
+             debug=n
+             );
+```
+ */
+
 %MACRO IBES_SAMPLE(
                 itickers=iclink,
                 suffix=epsus,
+                begindate=,
+                enddate=,
                 det_filter=measure='EPS' and fpi in ('6','7') and &begindate<=fpedats<=&enddate,
                 act_filter=missing(repdats)=0 and missing(anndats)=0 and 0<intck('day',anndats,repdats)<=90,
                 ibes_vars=ticker value fpedats anndats revdats measure fpi estimator analys pdf usfirm,

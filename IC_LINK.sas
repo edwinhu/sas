@@ -1,3 +1,31 @@
+/*
+Author: Edwin Hu
+Date: 2013-05-24
+
+# IC_LINK #
+
+## Summary ##
+Creates a linking table between CRSP and COMPUSTAT
+
+## Variables ##
+- lib: default library to use
+- inames: IBES names dataset (ibes.idsum)
+- cnames: CRSP names file (crsp.stocknames)
+- debug: debug mode (n)
+
+## Usage ##
+```
+%IMPORT "~/git/sas/IC_LINK.sas";
+
+%IC_LINK(
+         lib = USER,
+         inames = ibes.idsum,
+         cnames = crsp.stocknames,
+         debug = n
+         );
+```
+ */
+
 %MACRO IC_LINK(
                lib = USER,
                inames = ibes.idsum,
