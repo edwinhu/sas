@@ -1,41 +1,38 @@
-/*******************READ ME*********************************************
-* - Macro to bulk load write to PostgreSQL without ODBC -
-*
-* SAS VERSION:    9.4.0
-* Postgre VERSION: 9.2.4
-* DATE:           2013-12-19
-* AUTHOR:         eddyhu@gmail.com
-*
-****************END OF READ ME******************************************/
+/*
+Author: Edwin Hu
+Date: 2013-05-24
 
+# SAS2POSTGRE #
+
+## Summary ##
+Exports SAS dataset to PostgreSQL database
+
+## Variables ##
+- lib: default library (USER)
+- dsetin: input dataset
+- server: Postgresql server address (localhost)
+- port: Postgresql port number (5432)
+- user: Postgresql user
+- pass: Postgresql user password
+- db: Postgresql database
+- format: format statement for SAS dataset columns
+- rename: rename statement for SAS dataset columns
+- debug: debug mode (n)
+
+## Usage ##
+```
+%IMPORT "~/git/sas/SAS2POSTGRE.sas";
+
+%SAS2POSTGRE(lib=USER,dsetin=&syslast.,
+                    server=localhost, port=5432,
+                    user=eddyhu, pass='asdf', db=wrds,
+                    format=,rename=,debug=n);
+```
+ */
 %MACRO SAS2POSTGRE(lib=USER,dsetin=&syslast.,
                     server=localhost, port=5432,
                     user=eddyhu, pass='asdf', db=wrds,
                     format=,rename=,debug=n);
-   /*****************************************************************
-   *  MACRO:      SAS2POSTGRE()
-   *  GOAL:       output a dataset in SAS to a table in PostgreSQL
-   *  PARAMETERS: libname     = SAS library (default USER)
-   *              dsetin      = SAS dataset to export
-   *              server      = Postgre server address (default localhost)
-   *              port        = Postgre server port (default 5432)
-   *              user        = Postgre username
-   *              pass        = Postgre user password
-   *              db          = Postgre database
-   *              format      = DATA step format statement (optional)
-   *              rename      = DATA step rename statement (optional)
-   *              debug       = if y then send BULKLOAD trace info to SAS log
-   *                            useful for figuring out if you have badly formatted
-   *                            columns, and if so what specific row is being rejected
-   *
-   *   NOTE:      The BULKLOAD options are hardcoded and should be modified
-   *              to suit your system.
-   *
-   *              BL_PSQL_PATH  = Exact path to the psql batch (default psql)
-   *                              can be removed if PostgreSQL\x.x\bin\ is in your %PATH%
-   *              BL_DELETE_DATAFILE = If YES deletes generated logs/flat files
-   *              BL_DEFAULT_DIR     = Directory to write logs/flat files (default %TEMP%)
-   *****************************************************************/
 
 %if %SUBSTR(%LOWCASE(&debug.),1,1) = n %then %do;
     options sastrace=',,,d' sastraceloc=saslog;

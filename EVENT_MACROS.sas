@@ -171,7 +171,7 @@ A collection of event study macros adapted from WRDS.
                 (c.time-b.time) as t,
                 b.event_id,
                 b.*,a.*
-            from &daily_file.(keep=_numeric_) as a, _temp as b, _caldates as c
+            from &daily_file. as a, _temp as b, _caldates as c
             where a.date between b.estper_beg and b.evtwin_end
             and a.permno = b.&idvar.
             and a.date = c._edate
@@ -214,13 +214,6 @@ A collection of event study macros adapted from WRDS.
     proc sort data=&prefix._expand;
         by event_id t;
     run;
-
-    data &prefix._expand;
-        set &prefix._expand;
-        by event_id;
-        me_l1 = lag(me);
-    run;
-    %put ### DONE! ###;
 
     %if %substr(%lowcase(&debug),1,1) = n %then %do;
     proc datasets noprint;

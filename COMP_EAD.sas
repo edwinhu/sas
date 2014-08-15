@@ -6,7 +6,7 @@ Date: 2013-05-24
 
 ## Summary ##
 Gets quarterly earnings announcement dates from COMPUSTAT and
-fetches CRSP PERMNOs. Makes a file `comp_ead`.
+fetches CRSP PERMNOs. Makes a file `comp_ead_events`.
 
 ## Variables ##
 - comp_vars: list of COMPUSTAT variables to fetch
@@ -25,7 +25,7 @@ fetches CRSP PERMNOs. Makes a file `comp_ead`.
                         filter=not missing(saleq) or atq>0
                         );
 
-* Now do stuff with comp_ead file ;
+* Now do stuff with comp_ead_events file ;
 ```
 */
 
@@ -38,12 +38,12 @@ fetches CRSP PERMNOs. Makes a file `comp_ead`.
                         filter=not missing(saleq) or atq>0
                         );
 
-    %put;%put; Merging comp.fundq with CCM linking table;
+    %put;%put Merging comp.fundq with CCM linking table;
         proc sql;
                 drop table comp_ead;
-                drop view _comp_ead, _ead;
+                drop table _comp_ead, _ead;
 
-            create view _comp_ead as
+            create table _comp_ead as
             select a.gvkey, a.datadate, a.rdq,
                     b.lpermno as permno, b.lpermco as permco,
                 /*Compustat variables*/
@@ -63,7 +63,7 @@ fetches CRSP PERMNOs. Makes a file `comp_ead`.
             and a.rdq IS NOT NULL
             ;
 
-            create view _ead as
+            create table _ead as
             select a.*, b.date as rdq_adj
                 format=yymmdd10. label='Adjusted Report Date of Quarterly Earnings'
             from (select distinct rdq from _comp_ead) a
@@ -73,7 +73,7 @@ fetches CRSP PERMNOs. Makes a file `comp_ead`.
         having b.date-a.rdq=min(b.date-a.rdq)
         ;
 
-        create view _comp_ead_events
+        create table _comp_ead_events
                 (keep=gvkey datadate rdq rdq_adj
                 permno permco event_id mcap prccq &comp_vars.) as
         select a.*, b.rdq_adj
@@ -83,7 +83,7 @@ fetches CRSP PERMNOs. Makes a file `comp_ead`.
         ;
     quit;
 
-   %put;%put; Checking for duplicates and outputting;
+   %put;%put Checking for duplicates and outputting;
         proc sort data=_comp_ead_events
                 out=comp_ead_events nodupkey;
                 by permno rdq_adj;
@@ -96,8 +96,8 @@ fetches CRSP PERMNOs. Makes a file `comp_ead`.
         run;
 
     proc sql;
-        drop view _comp_ead_events, _comp_ead, _ead;
+        drop table _comp_ead_events, _comp_ead, _ead;
         quit;
 
-    %put;%put; COMP_EAD created;
+    %put;%put COMP_EAD created;
 %MEND COMP_EAD;
