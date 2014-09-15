@@ -37,7 +37,7 @@ Gets the median analyst forecasts from IBES
                 suffix=epsus,
                 begindate=,
                 enddate=,
-                det_filter=measure='EPS' and fpi in ('6','7') and &begindate<=fpedats<=&enddate,
+                det_filter=and measure='EPS' and fpi in ('6','7'),
                 act_filter=missing(repdats)=0 and missing(anndats)=0 and 0<intck('day',anndats,repdats)<=90,
                 ibes_vars=ticker value fpedats anndats revdats measure fpi estimator analys pdf usfirm,
                 debug=n
@@ -62,7 +62,7 @@ Gets the median analyst forecasts from IBES
             select *
             from ibes.detu_&suffix.
                     (
-                    where=(&det_filter.)
+                    where=(&begindate.<=fpedats<=&enddate. &det_filter.)
                     keep=&ibes_vars
                     ) as a, /* det_filter and ibes_vars are specified*/
                  &itickers as b                                              /* prior to invoking IBES_SAMPLE*/
