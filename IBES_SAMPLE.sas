@@ -62,7 +62,7 @@ Gets the median analyst forecasts from IBES
             select *
             from ibes.detu_&suffix.
                     (
-                    where=(&begindate.<=fpedats<=&enddate. &det_filter.)
+                    where=(fpedats between "&begindate."d and "&enddate."d &det_filter.)
                     keep=&ibes_vars
                     ) as a, /* det_filter and ibes_vars are specified*/
                  &itickers as b                                              /* prior to invoking IBES_SAMPLE*/
