@@ -59,6 +59,8 @@ files because you get a lot of crazy quotes like 0 or 99999999.
 ```
 */
 
+%let sec = 0;
+
 %MACRO TAQ_YEARLY(yyyy=1993,
     outlib=/scratch/rice/eddy,
     pre=regular,
@@ -68,6 +70,8 @@ files because you get a lot of crazy quotes like 0 or 99999999.
     ex= and ex in ('A','N','T'),
     modevar = and mode not in (4,7,9,11,13,14,15,19,20,27,28)
     );
+
+    %SYSEXEC mkdir &outlib.;
 
     libname wtaq "/wrds/nyse/sasdata/wrds_taqs_ct";
     libname out "&outlib.";
@@ -99,7 +103,7 @@ files because you get a lot of crazy quotes like 0 or 99999999.
 
                       /* Lee and Ready Test */
                       /* Apply Quote Test first */
-                      LeeReady=sign(Price-MidPoint&sec);
+                      LeeReady=sign(Price-MidPoint&sec.);
                       LeeReady2 = LeeReady;
                       /* Then, Apply Tick Test  */
                       if LeeReady=0 or LeeReady = . then LeeReady=TICK;                               *Tick is already generated on the WRDS-matched NBBO file;
