@@ -22,19 +22,31 @@ There is no built-in resource control (RAM/CPU) so make sure to
 test your code on one group at a time before spawning too many
 concurrent processes!
 
+## Usage ##
+
+%INCLUDE ~/git/sas/PARFOR;
+
+%LET FUNC = %STR(
+    proc print data=perf_&yyyy.(obs=25);
+    var exret: ret:;
+    run;
+);
+
+%PARFOR(FUNC=&FUNC.);
+
 */
 
-OPTIONS SASCMD='sas -nosyntaxcheck' AUTOSIGNON;
-%LET TASKLIST = ;
-%MACRO PARFOR;
-    %DO yyyy=1999 %TO 2012;
+%MACRO PARFOR (FUNC=);
+    OPTIONS SASCMD='sas -nosyntaxcheck' AUTOSIGNON;
+    %LET TASKLIST = ;
+    %DO yyyy=1999 %TO 2000;
         %LET TASKLIST = &TASKLIST. p&yyyy.;
         %SYSLPUT _ALL_ / REMOTE=p&yyyy.;
         RSUBMIT p&yyyy. WAIT=N PERSIST=NO;
         /* INSERT YOUR CODE HERE */
+        %QUOTE(&FUNC.);
         ENDRSUBMIT;
    %END;
-%MEND;
-%PARFOR;
 WAITFOR _ALL_ &TASKLIST.;
-%PUT DONE;
+%PUT DONE &TASKLIST.;
+%MEND;
