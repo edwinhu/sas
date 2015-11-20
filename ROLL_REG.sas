@@ -31,6 +31,7 @@ Runs rolling regressions.
  */
 
 %MACRO ROLL_REG(dsetin=,
+        dsetout=,
         id=permno,
         date=date,
         y=exret,
@@ -79,14 +80,14 @@ Runs rolling regressions.
         Intercept = _n; Y=_N; X=_N;
         output;
     run;
-
-    proc reg data=_roll_rsscp noprint
-        outest=roll_results(rename=(id=&id. date=&date. x=&x.)
+    
+    proc reg data=_roll_rsscp(type=sscp obs=MAX) noprint
+        outest=&dsetout.(rename=(id=&id. date=&date. x=&x.)
           keep=id date Intercept x);
         by id date;
         model y=x;
     quit;
-
+            
     %put;%put ### DONE! ###;
 
     %if %substr(%lowcase(&debug),1,1) = n %then %do;
