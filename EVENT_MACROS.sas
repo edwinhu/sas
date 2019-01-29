@@ -130,6 +130,9 @@ A collection of event study macros adapted from WRDS.
         %if %lowcase("&s.") eq "m" %then %do;
             edate = intnx("MONTH",&datevar.,0,'E');
         %end;
+        %else %do;
+            edate=&datevar.;
+        %end;
         format edate yymmdd10.;
     run;    
 
