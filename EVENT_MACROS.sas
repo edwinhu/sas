@@ -133,9 +133,6 @@ A collection of event study macros adapted from WRDS.
         format edate yymmdd10.;
     run;    
 
-    proc print data=_temp(obs=25);
-    var edate permno;run;
-
     /*Event dates should already be trading calendar days    */
     /*Merge in relevant dates from the trading calendar      */
     %MACRO MERGE;
