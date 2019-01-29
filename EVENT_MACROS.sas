@@ -118,12 +118,16 @@ A collection of event study macros adapted from WRDS.
         create table _temp
         as select distinct b.permno, a.*
         from &prefix._events a left join _link b
-        on a.cusip=b.ncusip and b.fdate<=a.&datevar.<=b.ldate
+        on substr(a.cusip,1,6)=substr(b.ncusip,1,6) and b.fdate<=a.&datevar.<=b.ldate
         order by a.&datevar.;
-    quit;%end;
+    quit;
+    %end;
     /*pre-sort the input dataset in case it is not sorted yet*/
+    %else %do;
     proc sort data=&prefix._events out=_temp;
         by &datevar.;
+    run;
+    %end;
     data _temp;
         set _temp;
         event_id=_n_;
@@ -180,7 +184,7 @@ A collection of event study macros adapted from WRDS.
     %put ### DONE! ###;
 
     proc sort data=_temp2;
-        by &idvar. estper_beg evtwin_end;
+        by permno estper_beg evtwin_end;
     run;
     %put; %put ### STEP 3. RETRIEVING RETURNS DATA FROM CRSP...;
 
@@ -192,7 +196,7 @@ A collection of event study macros adapted from WRDS.
                 b.*,a.*
             from &crsp..&s.sf as a, _temp2 as b, _caldates as c
             where a.date between b.estper_beg and b.evtwin_end
-            and a.permno = b.&idvar.
+            and a.permno = b.permno
             and a.date = c.edate
             group by b.event_id
             ;
