@@ -21,17 +21,16 @@ appropriate PERMNOs. This handles a lot of silly merge issues.
 %IMPORT "~/git/sas/CC_LINK.sas";
 
 %CC_LINK(dsetin=&syslast.,
-                 dsetout=compx,
-         datevar=datadate,
-         keep_vars=);
+    dsetout=compx,
+    datevar=datadate,
+    keep_vars=);
 ```
 */
 
-%MACRO CC_LINK(dsetin=&syslast.,
+%MACRO CC_LINK(dsetin=comp.funda,
                dsetout=compx,
                datevar=datadate,
-               keep_vars=
-               );
+               keep_vars=);
 
 OPTIONS NONOTES;
 
@@ -44,14 +43,17 @@ PROC SQL;
     SELECT b.lpermno AS permno,
             b.lpermco as permco,
             a.*
-    FROM &dsetin.(keep=gvkey &datevar.
-                    &keep_vars.
-                    indfmt
-                    datafmt
-                    consol
-                    popsrc
-                    cusip cik
-                    ) AS a, ccm.ccmxpf_linktable AS b
+    FROM &dsetin.(keep=GVKEY &datevar.
+        &keep_vars.
+        CUSIP CIK
+        INDFMT DATAFMT CONSOL POPSRC
+        %if &dsetin.=comp.funda %then %do;
+        PSTKRV PSTKL PSTK TXDITC TXDB SEQ CEQ CEQL AT LT CSHPRI PRCC_F GP
+        %end;
+        %if &dsetin.=comp.fundq %then %do;
+        ATQ LTQ IBQ RDQ
+        %end;        
+        ) AS a, crspm.ccmxpf_linktable AS b
     WHERE a.indfmt IN ('INDL','BANK','UTIL')
     AND a.datafmt = 'STD'
     AND a.popsrc = 'D'
@@ -68,9 +70,35 @@ PROC SQL;
     /* around 1994 it switches from April to June.               */
     GROUP BY b.LPERMNO, YEAR(a.&datevar.)
     HAVING MAX(a.&datevar.)=a.&datevar.
-    ORDER BY a.&datevar., permno;
+    ORDER BY permno, a.&datevar.;
 QUIT;
 
+%if &dsetin.=comp.funda %then %do;
+/* Compute Book Equity */
+data &dsetout.;
+    set &dsetout.;
+    /* See Davis, Fama , French (2002) for a complete description */
+    /* Preferred Stock Equity is measured as redemption, liquidation, or par value */
+    PS = coalesce(PSTKRV,PSTKL,PSTK,0);
+    /* Deferred tax is measured as balance sheet deferred taxes and investment tax credit (if available) */
+    DEFTX = coalesce(TXDITC,TXDB,0);
+    /* Shareholder's equity is measured as COMPUSTAT shareholder equity (total),
+    or common plus preferred stock, or total assets minus total liabilities */
+    SHE = coalesce(SEQ,coalesce(CEQ,CEQL,0) + coalesce(PSTK,0),coalesce(AT,0) - coalesce(LT,0),0);
+    /* Book equity is shareholder's equity plus deferred taxes minus preferred stock */
+    BE = coalesce(SHE + DEFTX - PS);
+    if BE<0 then BE=.;
+    ME_COMP = abs(coalesce(CSHPRI,0)*coalesce(PRCC_F,0))*1000;
+    LEV = LT/AT;
+    YEAR = year(datadate);
+    label BE='Book Value of Equity Fiscal Year t-1' YEAR='Calendar Year';
+    drop INDFMT DATAFMT CONSOL POPSRC
+        PSTKRV PSTKL PSTK TXDITC TXDB SEQ CEQ CEQL CSHPRI PRCC_F
+        PS DEFTX SHE;
+run;
+%end;
+
 OPTIONS NOTES;
+%PUT ### DONE ###;
 
 %MEND CC_LINK;
