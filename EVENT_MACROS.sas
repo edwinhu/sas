@@ -1,6 +1,7 @@
 /*
 Author: Edwin Hu
 Date: 2013-05-24
+Last Update: 2019-01-18
 
 # EVENT_MACROS #
 
@@ -11,43 +12,52 @@ A collection of event study macros adapted from WRDS.
 ```
 %IMPORT "~/git/sas/EVENT_MACROS.sas";
 
-%EVENT_SETUP(model = ffm, retvar = ret,
-             estper = 252, gap = 30,
-             beg = -30, end = 60
-             );
+%EVENT_SETUP(pref=,
+    crsp_lib=crspm,
+    frequency=d,
+    date_var=event_date,
+    id_var=permno,
+    model=ffm,
+    ret_var=retx,
+    est_per=252, gap_win=30,
+    beg_win=-30, end_win=120
+    );
 
-%EVENT_EXPAND(lib=user,
-              daily_file = crsp.crsp_d,
-              prefix = ,
-              datevar = date,
-              idvar = permno,
-              retvar = ret,
-              model = ffm,
-              estper = 252, gap = 30,
-              beg = -30, end = 60,
-              debug = n
-              );
+%EVENT_EXPAND(lib=user, debug = n);
 
-%EVENT_STATS(dsetin = ,
-             prefix = ,
-             group = ,
-             filter = and shrcd in (10,11) and exchcd in (1,2,3),
-             debug= = n
-            );
+%EVENT_STATS(prefix = ,
+    dsetin = ,
+    group = ,
+    filter = and shrcd in (10,11) and exchcd in (1,2,3),
+    debug= = n
+    );
 
 ```
 */
 
-%MACRO EVENT_SETUP(
-                    model = ffm, retvar = ret,
-                    estper = 252, gap = 30,
-                    beg = -30, end = 60
-                    );
-
-    %global evtwin factors abret newvars;
+%MACRO EVENT_SETUP(pref=,
+    crsp_lib=crspm,
+    frequency=d,
+    date_var=date,
+    id_var=permno,
+    model=ffm,
+    ret_var=retx,
+    est_per=252, gap_win=30,
+    beg_win=-30, end_win=60
+    );
+    /* Assign as global  */
+    %global prefix crsp s datevar idvar retvar estper gap beg end evtwin factors abret newvars;
+    %let prefix=&pref.;
+    %let crsp=&crsp_lib.;
+    %let s=&frequency.;
+    %let datevar=&date_var.;
+    %let idvar=&id_var.;
+    %let retvar=&ret_var.;
+    %let estper=&est_per.;
+    %let gap=&gap_win.;
+    %let beg=&beg_win.;
+    %let end=&end_win.;
     %let evtwin=%eval(&end-&beg+1); *length of event window in trading days;
-
-
     /*depending on the model, define the model for abnormal returns*/
     %if %lowcase(&model)=madj %then %do;
         %let factors=;
@@ -70,51 +80,30 @@ A collection of event study macros adapted from WRDS.
         %let newvars=(intercept=alpha vwretd=beta smb=sminb hml=hminl mom=wminl);
     %end;
     %put;%put ### EVENT_SETUP DONE! ###;
-
 %MEND EVENT_SETUP;
 
-%MACRO EVENT_EXPAND(
-                    lib=user,
-                    daily_file = crsp.crsp_d,
-                    prefix = ,
-                    datevar = date,
-                    idvar = permno,
-                    retvar = ret,
-                    model = ffm,
-                    estper = 252, gap = 30,
-                    beg = -30, end = 60,
-                    debug = n
-                    );
+%MACRO EVENT_EXPAND(lib=user,
+    debug=n
+    );
 
 /*****************************************************************
 *  MACRO:      EVENT_EXPAND()
 *  GOAL:       Expand an event file into an (t, event_id) ordered file
-*  PARAMETERS: daily_file    = dataset with daily variables, should be something like
-                                CRSP.DSF, CRSP.CRSP_D, or some aggregated daily trades
-*              prefix        = event name prefix, e.g. &prefix._events
-*              datevar       = date variable, default date
-*              idvar         = identifier variable, default permno
-*              retvar        = return variable, default ret
-*              estper        = length of estimation period, default 252
-*              gap           = gap between estimation period and event window, default 30
-*              beg           = beginning date of event window, default -30
-*              end           = end date of event window, default 60
-*              min_obs       = minimum number of observations required, min 60
-*              min_nret       = minimum number of returns required, min 50
 *****************************************************************/
 
-    %EVENT_SETUP(model=&model.,estper=&estper.,gap=&gap.,beg=&beg.,end=&end.);
-
-    %put; %put ### STEP 1. CREATING TRADING DAY CALENDAR...;
+    %put; %put ### STEP 1. CREATING TRADING CALENDAR...;
     data _caldates;
-        merge crsp.dsiy (keep=caldt rename=(caldt=estper_beg))
-        crsp.dsiy (keep=caldt firstobs=%eval(&estper) rename=(caldt=estper_end))
-        crsp.dsiy (keep=caldt firstobs=%eval(&estper+&gap+1) rename=(caldt=evtwin_beg))
-        crsp.dsiy (keep=caldt firstobs=%eval(&estper+&gap-&beg+1) rename=(caldt=_edate))
-        crsp.dsiy (keep=caldt firstobs=%eval(&estper+&gap+&evtwin) rename=(caldt=evtwin_end));
-        format estper_beg estper_end evtwin_beg _edate evtwin_end yymmdd10.;
-        if nmiss(estper_beg,estper_end,evtwin_beg,evtwin_end,_edate)=0;
+        merge &crsp..&s.siy (keep=caldt rename=(caldt=estper_beg))
+        &crsp..&s.siy (keep=caldt firstobs=%eval(&estper) rename=(caldt=estper_end))
+        &crsp..&s.siy (keep=caldt firstobs=%eval(&estper+&gap+1) rename=(caldt=evtwin_beg))
+        &crsp..&s.siy (keep=caldt firstobs=%eval(&estper+&gap-&beg+1) rename=(caldt=edate))
+        &crsp..&s.siy (keep=caldt firstobs=%eval(&estper+&gap+&evtwin) rename=(caldt=evtwin_end));
+        format estper_beg estper_end evtwin_beg edate evtwin_end yymmdd10.;
+        if nmiss(estper_beg,estper_end,evtwin_beg,evtwin_end,edate)=0;
         time+1;
+    run;
+    proc sort data=_caldates;
+        by edate;
     run;
     %put;%put ### DONE! ###;
 
@@ -124,57 +113,91 @@ A collection of event study macros adapted from WRDS.
         create view  _link
         as select permno, ncusip,
         min(namedt) as fdate format=yymmdd10., max(nameendt) as ldate format=yymmdd10.
-        from crsp.dsenames
+        from &crsp..&s.senames
         group by permno, ncusip;
-
         create table _temp
         as select distinct b.permno, a.*
         from &prefix._events a left join _link b
-        on a.cusip=b.ncusip and b.fdate<=a.&datevar.<=b.ldate
+        on substr(a.cusip,1,6)=substr(b.ncusip,1,6) and b.fdate<=a.&datevar.<=b.ldate
         order by a.&datevar.;
-    quit;%end;
-    %else %do;
+    quit;
+    %end;
     /*pre-sort the input dataset in case it is not sorted yet*/
+    %else %do;
     proc sort data=&prefix._events out=_temp;
         by &datevar.;
     run;
     %end;
+    data _temp;
+        set _temp;
+        event_id=_n_;
+        %if %lowcase("&s.") eq "m" %then %do;
+            edate = intnx("MONTH",&datevar.,0,'E');
+        %end;
+        %else %do;
+            edate=&datevar.;
+        %end;
+        format edate yymmdd10.;
+    run;    
 
     /*Event dates should already be trading calendar days    */
     /*Merge in relevant dates from the trading calendar      */
-
-    proc sql;
-        create table _temp (drop=&datevar. _edate)
-        as select monotonic() as event_id, a.*,
-            a.&datevar. as edate format yymmdd10., b.*
-        from _temp a, _caldates b
-        where a.&datevar. = b._edate
-    ;
-    quit;
+    %MACRO MERGE;
+        %let num_vars = estper_beg estper_end evtwin_beg evtwin_end time;
+        data _temp2;
+            retain
+                %local i next_name;
+            %do i=1 %to %sysfunc(countw(&num_vars.));
+                %let next_name = %scan(&num_vars., &i);
+                &next_name._
+                    %end;;
+                set _caldates(in=b) _temp(in=a);
+                by edate;
+                %local i next_name;
+                %do i=1 %to %sysfunc(countw(&num_vars.));
+                    %let next_name = %scan(&num_vars., &i);
+                    if not missing(&next_name.) then &next_name._=&next_name.;
+                    drop &next_name.;
+                    rename &next_name._=&next_name.;
+                    %end;
+                format estper: evtwin: yymmdd10.;
+                if a then output;
+                drop edate;
+        run;
+    %MEND;%MERGE;
 
     %put ; %put ### STEP 2. PREPARING BENCHMARK FACTORS... ;
+    data factors_d/view=factors_d;
+        set ff.factors_daily;
+    run;
+    data factors_m/view=factors_m;
+        set ff.factors_monthly(drop=date);
+        date=dateff;
+        format date yymmddn8.;
+    run;
+    
     proc sql;create table _factors
         as select a.caldt as date, a.vwretd, b.smb, b.hml, b.umd as mom
-        from crsp.dsiy (keep=caldt vwretd) a left join ff.factors_daily b
+        from &crsp..&s.siy (keep=caldt vwretd) a left join factors_&s. b
         on a.caldt=b.date;
     quit;
     %put ### DONE! ###;
 
-    proc sort data=_temp;
-        by &idvar. estper_beg evtwin_end;
+    proc sort data=_temp2;
+        by permno estper_beg evtwin_end;
     run;
     %put; %put ### STEP 3. RETRIEVING RETURNS DATA FROM CRSP...;
 
     proc sql;
-        create table _temp_expand (drop=time )
+        create table _temp_expand (drop=time)
             as select
                 (c.time-b.time) as t,
                 b.event_id,
                 b.*,a.*
-            from &daily_file. as a, _temp as b, _caldates as c
+            from &crsp..&s.sf as a, _temp2 as b, _caldates as c
             where a.date between b.estper_beg and b.evtwin_end
-            and a.permno = b.&idvar.
-            and a.date = c._edate
+            and a.permno = b.permno
+            and a.date = c.edate
             group by b.event_id
             ;
     quit;
@@ -225,9 +248,8 @@ A collection of event study macros adapted from WRDS.
 
 %MEND EVENT_EXPAND;
 
-%MACRO EVENT_STATS(
+%MACRO EVENT_STATS(prefix = ,
                 dsetin = ,
-                prefix = ,
                 group = ,
                 filter = and shrcd in (10,11) and exchcd in (1,2,3),
                 debug= = n
@@ -236,9 +258,7 @@ A collection of event study macros adapted from WRDS.
     %if %sysevalf(%superq(dsetin)=,boolean)
         %then %let data=&prefix._expand;
         %else %let data=&dsetin.;
-
     %put;%put Using input dataset &data.;
-
     proc sort data=&data.;
         by event_id t;
     run;
@@ -248,8 +268,7 @@ A collection of event study macros adapted from WRDS.
 *  GOAL:       Estimate betas over event study window, compute abnormal returns
 *  PARAMETERS: prefix        = prefix to describe the event, used to name
 *                               output files
-*              filterin      = estimation window filter
-*              filterout     = event window filter
+*              group         = give summary stats by group
 *****************************************************************/
     %put; %put ### STEP 5. ESTIMATING FACTOR EXPOSURES OVER THE ESTIMATION PERIOD...;
     proc printto log=junk new;run;
@@ -258,19 +277,21 @@ A collection of event study macros adapted from WRDS.
         keep=event_id intercept &factors _rmse_  _p_ _edf_) noprint;
     where estper_beg<=date<=estper_end;
     by event_id;
-    model ret=&factors;
+    model &retvar.=&factors;
     quit;
     %put ### DONE! ###;
     proc printto;run;
 
     %put; %put ### STEP 6. CALCULATING ONE-DAY ABNORMAL RETURN IN THE EVENT WINDOW...;
     proc sql;
-        create table _abrets(drop=&factors. _p_ _edf_ estper_beg estper_end) as
+        create table &prefix._car(drop=&factors. _p_ _edf_ estper_beg estper_end) as
         select *,
             &abret. as abret label='One-day Abnormal Return (AR)',
-            log(1+ret_adj) as logret,
+            log(1+&retvar.) as logret,
             _rmse_*_rmse_ as var_estp label='Estimation Period Variance',
-            _p_+_edf_ as nobs
+            _p_+_edf_ as nobs,
+            year(&datevar.) as yyyy,
+            coalesce(a.date GE a.&datevar.,0) as post
         from &data. a, _params b
         where a.event_id = b.event_id
         and a.date between a.evtwin_beg and a.evtwin_end
@@ -279,18 +300,20 @@ A collection of event study macros adapted from WRDS.
     %put ### DONE! ###;
 
     %put; %put ### STEP 7. CALCULATING CARS AND VARIOUS STATISTICS...;
-    proc means data=_abrets noprint;
+    proc means data=&prefix._car noprint;
         by event_id;
+        class &group.;
         where 1 &filter.;
-        id &group var_estp;
+        id var_estp;
         output out=_car sum(logret)=cret sum(abret)=car mean(abret)=aar n(abret)=nrets;
-
+    run;
+    
     /*calculate Standardized Cumulative Abnormal Returns*/
     data _car; set _car;
       poscar=car>0;
-    aar=aar*&evtwin.;
-    scar=car/(&evtwin*var_estp)**0.5;
-    cret=exp(cret)-1;
+      aar=aar*&evtwin.;
+      scar=car/(&evtwin*var_estp)**0.5;
+      cret=exp(cret)-1;
     label poscar='Positive Abnormal Return Dummy'
         scar=  'Standardized Cumulative Abnormal Return (SCAR)'
         car=   'Cumulative Abnormal Return (CAR)'
@@ -301,10 +324,11 @@ A collection of event study macros adapted from WRDS.
     /*compute stats across all events (i.e., permno-event date combinations*/
     proc means data=_car noprint;
       var cret car aar scar poscar;
-    class &group;
-    output out=_test
-        mean= n= t=/autoname;
-
+      class &group.;
+      output out=_test
+          mean= n= t=/autoname;
+    run;
+    
     /*calculate different stats for assessing    */
     /*statistical signficance of abnormal returns*/
     data &prefix._stats; set _test;
@@ -323,6 +347,9 @@ A collection of event study macros adapted from WRDS.
         poscar_mean= 'Percent of positive abnormal returns'
         tsign=       'Sign-test statistic';
     drop cret_N scar_N poscar_N cret_t poscar_t;
+    run;
+    proc sort data=&prefix._stats;
+        by &group.;
     run;
 
     proc print label u;
@@ -349,18 +376,9 @@ A collection of event study macros adapted from WRDS.
             %end;
     run;
 
-    /*create the final output dataset*/
-    proc sql;
-        create table &prefix._car as
-        select *
-        from _abrets a, _car (keep=event_id cret car scar nrets) b
-        where a.event_id = b.event_id
-        ;
-    quit;
-
     %if %substr(%lowcase(&debug),1,1) = n %then %do;
     proc datasets noprint;
-        delete _abrets _car _params;
+        delete _car _params;
     quit;
     %end;
 
@@ -368,7 +386,7 @@ A collection of event study macros adapted from WRDS.
 
 %MEND EVENT_STATS;
 
-%MACRO EVENT_PLOT (
+%MACRO EVENT_PLOT (retvar=retx,
                 dsetin = ,
                 prefix = ,
                 weightvar = vweight,
@@ -414,11 +432,11 @@ A collection of event study macros adapted from WRDS.
     proc sort data=&data.;by t;run;
     proc means data=&data. noprint;
         by t;
-        var ret_adj exret abret;
-        class &group;
-        weight &weightvar.;
+        var &retvar. exret abret;
+        class &group; 
+        /* weight &weightvar.;  */
         where 1 &filter;
-        output out=_port(where=(_TYPE_=1))
+        output out=_port/* (where=(_TYPE_=1)) */
       mean= n= t=/autoname;
     run;
     %if %SUBSTR(%LOWCASE(&debug),1,1) = n %then %do;
@@ -433,14 +451,14 @@ A collection of event study macros adapted from WRDS.
         by &group. t;
     proc expand data=_port
         out=_car(keep=t &group.
-                ret_adj_Mean exret_Mean abret_Mean
+                &retvar._Mean exret_Mean abret_Mean
                 bhar: car:
                 &group.) method=none;
       by &group.; id t;
-      convert ret_adj_Mean=bhar0/
+      convert &retvar._Mean=bhar0/
         transformin=(trim 1 setleft (. 0))
         transformout=(+1 cuprod);
-      convert ret_adj_Mean=car0/
+      convert &retvar._Mean=car0/
         transformin=(trim 1 setleft (. 0))
         transformout=(sum);
       convert exret_Mean=bhar1/
@@ -473,8 +491,9 @@ A collection of event study macros adapted from WRDS.
 
     ODS _ALL_ CLOSE;
     ODS PDF STYLE=&style. FILE=&fileref. BOOKMARKGEN=NO;
+    ODS SELECT SGPlot.SGPlot;
     OPTIONS NODATE NONUMBER ORIENTATION=LANDSCAPE;
-    GOPTIONS DEVICE=PDFG;
+    GOPTIONS DEVICE=PDF;
     title1 "Cumulative returns for &prefix.";
     proc sgplot data=_car;
         %if %lowcase(&plot.)=b %then %do;
@@ -494,6 +513,7 @@ A collection of event study macros adapted from WRDS.
         refline 0 / axis=x lineattrs= (thickness=2 pattern=4);
     run;
     ODS PDF CLOSE;
+    ODS LISTING;ODS OUTPUT;
 
     %if %SUBSTR(%LOWCASE(&debug),1,1) = n %then %do;
     /*house cleaning*/
@@ -502,6 +522,8 @@ A collection of event study macros adapted from WRDS.
     quit;
     %end;
 %MEND EVENT_PLOT;
+
+/* I don't use the below anymore */
 
 %MACRO EVENT_SUMM(
                   prefix=,
