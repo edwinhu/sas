@@ -306,6 +306,23 @@ CRSP PERMNOs. Makes a file <code>comp_ead_events</code>.
 A collection of event study macros adapted from WRDS.
 </p>
 
+<p>
+<code>%EVENT_SETUP</code> sets the global variables, including the start and end
+dates of the estimation and event windows. It also sets the formula to
+use for the abnormal returns.
+</p>
+
+<p>
+<code>%EVENT_EXPAND</code> does the bulk of the merging of datasets, creating the
+actual windows and ultimately the output file <code>&amp;prefix._expand</code>.
+</p>
+
+<p>
+<code>%EVENT_STATS</code> computes abnormal returns, and then the summary
+statistics. The output file <code>&amp;prefix._car</code> contains the event-window
+data with abnormal returns.
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/EVENT_MACROS.sas"</span>;
@@ -393,8 +410,8 @@ complete before returning control to the user.
 </p>
 
 <p>
-<b><b>WARNING</b></b> There is no built-in resource control (RAM/CPU) so make sure to
-test your code on one group at a time before spawning too many
+<b><b>WARNING:</b></b> There is no built-in resource control (RAM/CPU) so make
+sure to test your code on one group at a time before spawning too many
 concurrent processes!
 </p>
 
@@ -416,10 +433,12 @@ concurrent processes!
 <h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/RESAMPLE.sas">RESAMPLE</a></h3>
 <div class="outline-text-3" id="text-">
 <p>
-Resample and forward-fill data from low to high frequency
-Commonly used to sample low frequency COMPUSTAT data before merging
-with higher frequency CRSP data.
+Resample and forward-fill data from low to high frequency Commonly
+used to sample low frequency COMPUSTAT data before merging with higher
+frequency CRSP data. It is more efficient to use <a href="https://github.com/edwinhu/sas/blob/master/MERGE_ASOF.sas">MERGE_ASOF</a> for this
+specific task.
 </p>
+
 <ul class="org-ul">
 <li>lib: input dataset library
 </li>
@@ -454,7 +473,8 @@ with higher frequency CRSP data.
 <h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/ROLL_REG.sas">ROLL_REG</a></h3>
 <div class="outline-text-3" id="text-">
 <p>
-Runs rolling regressions.
+Runs rolling regressions in a computationally efficient way, taking
+advantage of SAS SSCP matrices.
 </p>
 <ul class="org-ul">
 <li>dsetin: input dataset

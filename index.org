@@ -81,6 +81,17 @@ CRSP PERMNOs. Makes a file ~comp_ead_events~.
 
 A collection of event study macros adapted from WRDS.
 
+~%EVENT_SETUP~ sets the global variables, including the start and end
+dates of the estimation and event windows. It also sets the formula to
+use for the abnormal returns.
+
+~%EVENT_EXPAND~ does the bulk of the merging of datasets, creating the
+actual windows and ultimately the output file ~&prefix._expand~.
+
+~%EVENT_STATS~ computes abnormal returns, and then the summary
+statistics. The output file ~&prefix._car~ contains the event-window
+data with abnormal returns.
+
 #+BEGIN_SRC sas
 %INCLUDE "~/git/sas/EVENT_MACROS.sas";
 %EVENT_SETUP(pref=,
@@ -138,8 +149,8 @@ This Macro spawns multiple SAS processes in the background to make
 parallel processing easy. The Macro waits until all processes are
 complete before returning control to the user.
 
-**WARNING** There is no built-in resource control (RAM/CPU) so make sure to
-test your code on one group at a time before spawning too many
+**WARNING:** There is no built-in resource control (RAM/CPU) so make
+sure to test your code on one group at a time before spawning too many
 concurrent processes!
 
 #+BEGIN_SRC sas
@@ -154,9 +165,11 @@ concurrent processes!
 
 ** [[https://github.com/edwinhu/sas/blob/master/RESAMPLE.sas][RESAMPLE]]
 
-Resample and forward-fill data from low to high frequency
-Commonly used to sample low frequency COMPUSTAT data before merging
-with higher frequency CRSP data.
+Resample and forward-fill data from low to high frequency Commonly
+used to sample low frequency COMPUSTAT data before merging with higher
+frequency CRSP data. It is more efficient to use [[https://github.com/edwinhu/sas/blob/master/MERGE_ASOF.sas][MERGE_ASOF]] for this
+specific task.
+
 - lib: input dataset library
 - dsetin: input dataset
 - dsetout: output (resampled) dataset
@@ -174,7 +187,8 @@ with higher frequency CRSP data.
 
 ** [[https://github.com/edwinhu/sas/blob/master/ROLL_REG.sas][ROLL_REG]]
 
-Runs rolling regressions.
+Runs rolling regressions in a computationally efficient way, taking
+advantage of SAS SSCP matrices.
 - dsetin: input dataset
 - id: id variable
 - date: date variable
