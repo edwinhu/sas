@@ -212,9 +212,9 @@ The full repo can be found at <a href="http://github.com/edwinhu/sas">http://git
 <div class="outline-text-2" id="text-crsp">
 </div>
 
-<div id="outline-container-sec-" class="outline-3">
-<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/CC_LINK.sas">CC_LINK</a></h3>
-<div class="outline-text-3" id="text-">
+<div id="outline-container-cclink" class="outline-3">
+<h3 id="cclink"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/CC_LINK.sas">CC_LINK</a></h3>
+<div class="outline-text-3" id="text-cclink">
 <p>
 Links COMPUSTAT GVKEYs to CRSP PERMNOs.
 </p>
@@ -253,9 +253,9 @@ appropriate PERMNOs. This handles a lot of silly merge issues.
 <div class="outline-text-2" id="text-comp">
 </div>
 
-<div id="outline-container-sec-" class="outline-3">
-<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/COMP_EAD.sas">COMP_EAD</a></h3>
-<div class="outline-text-3" id="text-">
+<div id="outline-container-ead" class="outline-3">
+<h3 id="ead"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/COMP_EAD.sas">COMP_EAD</a></h3>
+<div class="outline-text-3" id="text-ead">
 <p>
 Gets quarterly earnings announcement dates from COMPUSTAT and fetches
 CRSP PERMNOs. Makes a file <code>comp_ead_events</code>.
@@ -299,9 +299,9 @@ CRSP PERMNOs. Makes a file <code>comp_ead_events</code>.
 <div class="outline-text-2" id="text-util">
 </div>
 
-<div id="outline-container-sec-" class="outline-3">
-<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/EVENT_MACROS.sas">EVENT_MACROS</a></h3>
-<div class="outline-text-3" id="text-">
+<div id="outline-container-event" class="outline-3">
+<h3 id="event"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/EVENT_MACROS.sas">EVENT_MACROS</a></h3>
+<div class="outline-text-3" id="text-event">
 <p>
 A collection of event study macros adapted from WRDS.
 </p>
@@ -349,9 +349,9 @@ data with abnormal returns.
 </div>
 
 
-<div id="outline-container-sec-" class="outline-3">
-<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/MERGE_ASOF.sas">MERGE_ASOF</a></h3>
-<div class="outline-text-3" id="text-">
+<div id="outline-container-asof" class="outline-3">
+<h3 id="asof"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/MERGE_ASOF.sas">MERGE_ASOF</a></h3>
+<div class="outline-text-3" id="text-asof">
 <p>
 Does an as-of or "window" merge, e.g., COMPUSTAT yearly with CRSP
 monthly, or TAQ quotes with TAQ trades.
@@ -389,9 +389,9 @@ See, e.g., <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/p
 </div>
 </div>
 
-<div id="outline-container-sec-" class="outline-3">
-<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/PARFOR.sas">PARFOR</a></h3>
-<div class="outline-text-3" id="text-">
+<div id="outline-container-parfor" class="outline-3">
+<h3 id="parfor"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/PARFOR.sas">PARFOR</a></h3>
+<div class="outline-text-3" id="text-parfor">
 <p>
 A parallel FOR loop SAS Macro.
 </p>
@@ -417,7 +417,7 @@ concurrent processes!
 
 <div class="org-src-container">
 
-<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> ~/git/sas/PARFOR;
+<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/PARFOR"</span>;
 <span style="color: #D0372D;">%LET</span> FUNC = <span style="color: #006699;">%STR(</span>
     <span style="color: #D0372D;">proc print</span> <span style="color: #0000FF;">data=</span>perf_&amp;yyyy.(obs=25);
     <span style="color: #0000FF;">var</span> exret: ret:;
@@ -429,9 +429,9 @@ concurrent processes!
 </div>
 </div>
 
-<div id="outline-container-sec-" class="outline-3">
-<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/RESAMPLE.sas">RESAMPLE</a></h3>
-<div class="outline-text-3" id="text-">
+<div id="outline-container-resample" class="outline-3">
+<h3 id="resample"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/RESAMPLE.sas">RESAMPLE</a></h3>
+<div class="outline-text-3" id="text-resample">
 <p>
 Resample and forward-fill data from low to high frequency Commonly
 used to sample low frequency COMPUSTAT data before merging with higher
@@ -469,9 +469,9 @@ specific task.
 </div>
 </div>
 
-<div id="outline-container-sec-" class="outline-3">
-<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/ROLL_REG.sas">ROLL_REG</a></h3>
-<div class="outline-text-3" id="text-">
+<div id="outline-container-roll" class="outline-3">
+<h3 id="roll"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/ROLL_REG.sas">ROLL_REG</a></h3>
+<div class="outline-text-3" id="text-roll">
 <p>
 Runs rolling regressions in a computationally efficient way, taking
 advantage of SAS SSCP matrices.
@@ -513,12 +513,12 @@ advantage of SAS SSCP matrices.
 <ul class="nav">
 <li><a href="#crsp">CRSP</a>
 <ul class="nav">
-<li><a href="#sec-">CC_LINK</a></li>
+<li><a href="#cclink">CC_LINK</a></li>
 </ul>
 </li>
 <li><a href="#comp">COMPUSTAT</a>
 <ul class="nav">
-<li><a href="#sec-">COMP_EAD</a></li>
+<li><a href="#ead">COMP_EAD</a></li>
 </ul>
 </li>
 <li><a href="#taq">TAQ</a>
@@ -528,11 +528,11 @@ advantage of SAS SSCP matrices.
 </li>
 <li><a href="#util">Utilities</a>
 <ul class="nav">
-<li><a href="#sec-">EVENT_MACROS</a></li>
-<li><a href="#sec-">MERGE_ASOF</a></li>
-<li><a href="#sec-">PARFOR</a></li>
-<li><a href="#sec-">RESAMPLE</a></li>
-<li><a href="#sec-">ROLL_REG</a></li>
+<li><a href="#event">EVENT_MACROS</a></li>
+<li><a href="#asof">MERGE_ASOF</a></li>
+<li><a href="#parfor">PARFOR</a></li>
+<li><a href="#resample">RESAMPLE</a></li>
+<li><a href="#roll">ROLL_REG</a></li>
 </ul>
 </li>
 </ul>

@@ -22,6 +22,9 @@ The full repo can be found at http://github.com/edwinhu/sas
 :END:
 
 ** [[https://github.com/edwinhu/sas/blob/master/CC_LINK.sas][CC_LINK]]
+:PROPERTIES:
+:CUSTOM_ID: cclink
+:END:
 
 Links COMPUSTAT GVKEYs to CRSP PERMNOs.
 
@@ -47,6 +50,9 @@ appropriate PERMNOs. This handles a lot of silly merge issues.
 :END:
 
 ** [[https://github.com/edwinhu/sas/blob/master/COMP_EAD.sas][COMP_EAD]]
+:PROPERTIES:
+:CUSTOM_ID: ead
+:END:
 
 Gets quarterly earnings announcement dates from COMPUSTAT and fetches
 CRSP PERMNOs. Makes a file ~comp_ead_events~.
@@ -78,6 +84,9 @@ CRSP PERMNOs. Makes a file ~comp_ead_events~.
 :END:
 
 ** [[https://github.com/edwinhu/sas/blob/master/EVENT_MACROS.sas][EVENT_MACROS]]
+:PROPERTIES:
+:CUSTOM_ID: event
+:END:
 
 A collection of event study macros adapted from WRDS.
 
@@ -115,6 +124,9 @@ data with abnormal returns.
 
 
 ** [[https://github.com/edwinhu/sas/blob/master/MERGE_ASOF.sas][MERGE_ASOF]]
+:PROPERTIES:
+:CUSTOM_ID: asof
+:END:
 
 Does an as-of or "window" merge, e.g., COMPUSTAT yearly with CRSP
 monthly, or TAQ quotes with TAQ trades.
@@ -137,6 +149,9 @@ See, e.g., [[https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.m
 #+END_SRC
 
 ** [[https://github.com/edwinhu/sas/blob/master/PARFOR.sas][PARFOR]]
+:PROPERTIES:
+:CUSTOM_ID: parfor
+:END:
 
 A parallel FOR loop SAS Macro.
 
@@ -154,7 +169,7 @@ sure to test your code on one group at a time before spawning too many
 concurrent processes!
 
 #+BEGIN_SRC sas
-%INCLUDE ~/git/sas/PARFOR;
+%INCLUDE "~/git/sas/PARFOR";
 %LET FUNC = %STR(
     proc print data=perf_&yyyy.(obs=25);
     var exret: ret:;
@@ -164,6 +179,9 @@ concurrent processes!
 #+END_SRC
 
 ** [[https://github.com/edwinhu/sas/blob/master/RESAMPLE.sas][RESAMPLE]]
+:PROPERTIES:
+:CUSTOM_ID: resample
+:END:
 
 Resample and forward-fill data from low to high frequency Commonly
 used to sample low frequency COMPUSTAT data before merging with higher
@@ -186,6 +204,9 @@ specific task.
 #+END_SRC
 
 ** [[https://github.com/edwinhu/sas/blob/master/ROLL_REG.sas][ROLL_REG]]
+:PROPERTIES:
+:CUSTOM_ID: roll
+:END:
 
 Runs rolling regressions in a computationally efficient way, taking
 advantage of SAS SSCP matrices.
