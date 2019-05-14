@@ -21,9 +21,9 @@ appropriate PERMNOs. This handles a lot of silly merge issues.
 %IMPORT "~/git/sas/CC_LINK.sas";
 
 %CC_LINK(dsetin=&syslast.,
-                 dsetout=compx,
-         datevar=datadate,
-         keep_vars=);
+    dsetout=compx,
+    datevar=datadate,
+    keep_vars=);
 ```
 */
 
