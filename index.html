@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>SAS Macros</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Org-mode">
+<meta name="author" content="Edwin Hu">
+
+<link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<style type="text/css">
+/* org mode styles on top of twbs */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-size: 18px;
+    margin-bottom: 105px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 101px;
+    background-color: #f5f5f5;
+}
+
+footer > div {
+    padding: 10px;
+}
+
+footer p {
+    margin: 0 0 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+#table-of-contents {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+blockquote p {
+    font-size: 18px;
+}
+
+pre {
+    font-size: 16px;
+}
+
+.footpara {
+    display: inline-block;
+}
+
+figcaption {
+  font-size: 16px;
+  color: #666;
+  font-style: italic;
+  padding-bottom: 15px;
+}
+
+/* from twbs docs */
+
+.bs-docs-sidebar.affix {
+    position: static;
+}
+@media (min-width: 768px) {
+    .bs-docs-sidebar {
+        padding-left: 20px;
+    }
+}
+
+/* All levels of nav */
+.bs-docs-sidebar .nav > li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+}
+.bs-docs-sidebar .nav > li > a:hover,
+.bs-docs-sidebar .nav > li > a:focus {
+    padding-left: 19px;
+    color: #A1283B;
+    text-decoration: none;
+    background-color: transparent;
+    border-left: 1px solid #A1283B;
+}
+.bs-docs-sidebar .nav > .active > a,
+.bs-docs-sidebar .nav > .active:hover > a,
+.bs-docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: bold;
+    color: #A1283B;
+    background-color: transparent;
+    border-left: 2px solid #A1283B;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-docs-sidebar .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav > li > a:focus {
+    padding-left: 29px;
+}
+.bs-docs-sidebar .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+}
+
+/* Nav: third level (shown on .active) */
+.bs-docs-sidebar .nav .nav .nav {
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 40px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav .nav > li > a:focus {
+    padding-left: 39px;
+}
+.bs-docs-sidebar .nav .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav .nav > .active:focus > a {
+    padding-left: 38px;
+    font-weight: 500;
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: 992px) {
+    .bs-docs-sidebar .nav > .active > ul {
+        display: block;
+    }
+    /* Widen the fixed sidebar */
+    .bs-docs-sidebar.affix,
+    .bs-docs-sidebar.affix-bottom {
+        width: 213px;
+    }
+    .bs-docs-sidebar.affix {
+        position: fixed; /* Undo the static from mobile first approach */
+        top: 20px;
+    }
+    .bs-docs-sidebar.affix-bottom {
+        position: absolute; /* Undo the static from mobile first approach */
+    }
+    .bs-docs-sidebar.affix .bs-docs-sidenav,.bs-docs-sidebar.affix-bottom .bs-docs-sidenav {
+        margin-top: 0;
+        margin-bottom: 0
+    }
+}
+@media (min-width: 1200px) {
+    /* Widen the fixed sidebar again */
+    .bs-docs-sidebar.affix-bottom,
+    .bs-docs-sidebar.affix {
+        width: 263px;
+    }
+}
+</style>
+<script type="text/javascript">
+$(function() {
+    'use strict';
+
+    $('.bs-docs-sidebar li').first().addClass('active');
+
+    $(document.body).scrollspy({target: '.bs-docs-sidebar'});
+
+    $('.bs-docs-sidebar').affix();
+});
+</script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-67919104-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-67919104-1');
+</script>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+</head>
+<body>
+<div id="content" class="container">
+<div class="row"><div class="col-md-9"><h1 class="title">SAS Macros</h1>
+<p>
+A collection of SAS Macros that I frequently use and occasionally update. 
+</p>
+
+<p>
+The full repo can be found at <a href="http://github.com/edwinhu/sas">http://github.com/edwinhu/sas</a>
+</p>
+
+<div id="outline-container-crsp" class="outline-2">
+<h2 id="crsp"><a id="sec-" name="sec-"></a>CRSP</h2>
+<div class="outline-text-2" id="text-crsp">
+</div>
+
+<div id="outline-container-sec-" class="outline-3">
+<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/CC_LINK.sas">CC_LINK</a></h3>
+<div class="outline-text-3" id="text-">
+<p>
+Links COMPUSTAT GVKEYs to CRSP PERMNOs.
+</p>
+
+<p>
+Takes a file which contains GVKEYs and dates and merges in the
+appropriate PERMNOs. This handles a lot of silly merge issues.
+</p>
+<ul class="org-ul">
+<li>dsetin: Input Dataset
+</li>
+<li>dsetout: Output Dataset Name, default compx
+</li>
+<li>datevar: date variable to use (datadate, rdq)
+</li>
+<li>keep_vars: variables to keep
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/CC_LINK.sas"</span>;
+<span style="color: #006699;">%CC_LINK(</span>dsetin=&amp;syslast.,
+    dsetout=compx,
+    datevar=datadate,
+    keep_vars=);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-comp" class="outline-2">
+<h2 id="comp"><a id="sec-" name="sec-"></a>COMPUSTAT</h2>
+<div class="outline-text-2" id="text-comp">
+</div>
+
+<div id="outline-container-sec-" class="outline-3">
+<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/COMP_EAD.sas">COMP_EAD</a></h3>
+<div class="outline-text-3" id="text-">
+<p>
+Gets quarterly earnings announcement dates from COMPUSTAT and fetches
+CRSP PERMNOs. Makes a file <code>comp_ead_events</code>.
+</p>
+<ul class="org-ul">
+<li>comp_vars: list of COMPUSTAT variables to fetch
+</li>
+<li>filter: filters to place on COMPUSTAT quarterly
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/COMP_EAD.sas"</span>;
+<span style="color: #006699;">%COMP_EAD(</span>comp_vars=gvkey fyearq fqtr conm datadate rdq
+    epsfxq epspxq
+    prccq ajexq
+    spiq cshoq cshprq cshfdq
+    saleq atq
+    fyr datafqtr,
+    filter=<span style="color: #0000FF;">not</span> <span style="color: #0000FF;">missing</span>(saleq) or atq&gt;0
+    );
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-taq" class="outline-2">
+<h2 id="taq"><a id="sec-" name="sec-"></a>TAQ</h2>
+<div class="outline-text-2" id="text-taq">
+</div>
+
+<div id="outline-container-sec-" class="outline-3">
+<h3 id="sec-">Coming soon</h3>
+</div>
+</div>
+
+<div id="outline-container-util" class="outline-2">
+<h2 id="util"><a id="sec-" name="sec-"></a>Utilities</h2>
+<div class="outline-text-2" id="text-util">
+</div>
+
+<div id="outline-container-sec-" class="outline-3">
+<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/EVENT_MACROS.sas">EVENT_MACROS</a></h3>
+<div class="outline-text-3" id="text-">
+<p>
+A collection of event study macros adapted from WRDS.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/EVENT_MACROS.sas"</span>;
+<span style="color: #006699;">%EVENT_SETUP(</span>pref=,
+    crsp_lib=crspm,
+    frequency=d,
+    date_var=event_date,
+    id_var=permno,
+    <span style="color: #0000FF;">model</span>=ffm,
+    ret_var=retx,
+    est_per=252, gap_win=30,
+    beg_win=-30, end_win=120
+    );
+<span style="color: #006699;">%EVENT_EXPAND(</span>lib=user, debug = n);
+<span style="color: #006699;">%EVENT_STATS(</span>prefix = ,
+    dsetin = ,
+    group = ,
+    filter = <span style="color: #0000FF;">and</span> shrcd in (10,11) <span style="color: #0000FF;">and</span> exchcd in (1,2,3),
+    debug= = n
+    );
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-" class="outline-3">
+<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/MERGE_ASOF.sas">MERGE_ASOF</a></h3>
+<div class="outline-text-3" id="text-">
+<p>
+Does an as-of or "window" merge, e.g., COMPUSTAT yearly with CRSP
+monthly, or TAQ quotes with TAQ trades.
+</p>
+
+<p>
+See, e.g., <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.merge_asof.html">pandas</a>, <a href="https://www.r-bloggers.com/understanding-data-table-rolling-joins/">rolling joins with <code>R data.table</code></a>, or <a href="https://code.kx.com/v2/ref/asof/">kdb+ asof</a>.
+</p>
+
+<ul class="org-ul">
+<li>a: dataset a
+</li>
+<li>b: dataset b
+</li>
+<li>merged: output merged dataset
+</li>
+<li>idvar: firm identifier (permno)
+</li>
+<li>datevar: date variable to use (date)
+</li>
+<li>num_vars: numeric variables from b to merge in
+</li>
+<li>char_vars: character variables from b to merge in
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/MERGE_ASOF.sas"</span>;
+<span style="color: #006699;">%MERGE_ASOF(</span>a=,b=,
+    merged=,
+    num_vars=);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-" class="outline-3">
+<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/PARFOR.sas">PARFOR</a></h3>
+<div class="outline-text-3" id="text-">
+<p>
+A parallel FOR loop SAS Macro.
+</p>
+
+<p>
+If you have huge files it is often better to use Split-Apply-Combine
+processing. For example processing daily trades by year can be done
+by splitting the dataset into yearly datasets and doing the processing
+in a parallel FOR loop.
+</p>
+
+<p>
+This Macro spawns multiple SAS processes in the background to make
+parallel processing easy. The Macro waits until all processes are
+complete before returning control to the user.
+</p>
+
+<p>
+<b><b>WARNING</b></b> There is no built-in resource control (RAM/CPU) so make sure to
+test your code on one group at a time before spawning too many
+concurrent processes!
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> ~/git/sas/PARFOR;
+<span style="color: #D0372D;">%LET</span> FUNC = <span style="color: #006699;">%STR(</span>
+    <span style="color: #D0372D;">proc print</span> <span style="color: #0000FF;">data=</span>perf_&amp;yyyy.(obs=25);
+    <span style="color: #0000FF;">var</span> exret: ret:;
+    <span style="color: #D0372D;">run;</span>
+);
+<span style="color: #006699;">%PARFOR(</span>FUNC=&amp;FUNC.);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-" class="outline-3">
+<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/RESAMPLE.sas">RESAMPLE</a></h3>
+<div class="outline-text-3" id="text-">
+<p>
+Resample and forward-fill data from low to high frequency
+Commonly used to sample low frequency COMPUSTAT data before merging
+with higher frequency CRSP data.
+</p>
+<ul class="org-ul">
+<li>lib: input dataset library
+</li>
+<li>dsetin: input dataset
+</li>
+<li>dsetout: output (resampled) dataset
+</li>
+<li>datevar: date variable to resample
+</li>
+<li>idvar: group by id variable
+</li>
+<li>infreq: input frequency
+</li>
+<li>outfreq: output (higher) frequency
+</li>
+<li>alignment: date alignment (E,S,B)
+</li>
+<li>debug: keep or delete temporary datasets
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/RESAMPLE.sas"</span>;
+<span style="color: #006699;">%RESAMPLE(</span>lib=sashelp, dsetin=citiyr, outfreq=monthly, idvar=, datevar=date);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-" class="outline-3">
+<h3 id="sec-"><a href="https://github.com/edwinhu/sas/blob/master/ROLL_REG.sas">ROLL_REG</a></h3>
+<div class="outline-text-3" id="text-">
+<p>
+Runs rolling regressions.
+</p>
+<ul class="org-ul">
+<li>dsetin: input dataset
+</li>
+<li>id: id variable
+</li>
+<li>date: date variable
+</li>
+<li>y: dependent variable
+</li>
+<li>x: independent variable
+</li>
+<li>ws: window size
+</li>
+<li>debug: debug mode (n)
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/ROLL_REG.sas"</span>;
+<span style="color: #006699;">%ROLL_REG(</span>dsetin=,
+          <span style="color: #0000FF;">id</span>=permno,
+          date=date,
+          y=exret,
+          x=mktrf,
+          ws=60,
+          debug=n);
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="col-md-3"><nav id="table-of-contents">
+<div id="text-table-of-contents" class="bs-docs-sidebar">
+<ul class="nav">
+<li><a href="#crsp">CRSP</a>
+<ul class="nav">
+<li><a href="#sec-">CC_LINK</a></li>
+</ul>
+</li>
+<li><a href="#comp">COMPUSTAT</a>
+<ul class="nav">
+<li><a href="#sec-">COMP_EAD</a></li>
+</ul>
+</li>
+<li><a href="#taq">TAQ</a>
+<ul class="nav">
+<li><a href="#sec-">Coming soon</a></li>
+</ul>
+</li>
+<li><a href="#util">Utilities</a>
+<ul class="nav">
+<li><a href="#sec-">EVENT_MACROS</a></li>
+<li><a href="#sec-">MERGE_ASOF</a></li>
+<li><a href="#sec-">PARFOR</a></li>
+<li><a href="#sec-">RESAMPLE</a></li>
+<li><a href="#sec-">ROLL_REG</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</div></div></div>
+<footer id="postamble" class="">
+<div><p class="date">Date: 2019-05-14</p>
+<p class="author">Author: Edwin Hu</p>
+<p class="creator">The Securities and Exchange Commission disclaims responsibility for any private publication or statement of any SEC employee or Commissioner. This webpage expresses the author's views and does not necessariliy reflect those of the Commission, the Commissioners, or members of the staff.</p>
+</div>
+</footer>
+</body>
+</html>
