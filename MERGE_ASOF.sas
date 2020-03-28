@@ -25,7 +25,7 @@ Does an as-of or "window" merge
 ```
 */
 %MACRO MERGE_ASOF(a=,b=,
-        lib=,
+        lib=USER,
         merged=,
         idvar=permno,
         datevar=date,
@@ -50,9 +50,9 @@ proc sql noprint;
     inner join
     dictionary.columns b
     on upcase(a.name) = upcase(b.name)
-    where upcase(a.libname)="&libs."
-    and upcase(a.memname)="&b."
-    and upcase(b.libname)="&libs."
+    where upcase(a.libname)=upcase("&lib.")
+    and upcase(a.memname)=upcase("&b.")
+    and upcase(b.libname)=upcase("&lib.")
     and upcase(b.memname)="_NCOLS"
     ;
     select a.length
@@ -61,9 +61,9 @@ proc sql noprint;
     inner join
     dictionary.columns b
     on upcase(a.name) = upcase(b.name)
-    where upcase(a.libname)="&libs."
-    and upcase(a.memname)="&b."
-    and upcase(b.libname)="&libs."
+    where upcase(a.libname)=upcase("&lib.")
+    and upcase(a.memname)=upcase("&b.")
+    and upcase(b.libname)=upcase("&lib.")
     and upcase(b.memname)="_CCOLS"
     ;
 quit; 
@@ -75,21 +75,23 @@ data &merged.;
             %let next_len = %scan(&nlen., &i);
             &next_name._ &next_len.
         %end;
+        %if %sysevalf(%superq(char_vars)^=,boolean) %then %do;
         %do i=1 %to %sysfunc(countw(&char_vars.));
             %let next_name = %scan(&char_vars., &i);
             %let next_len = %scan(&clen., &i);
             &next_name._ $ &next_len.
-    %end;;
+        %end;%end;;
     retain
         %local i next_name;
         %do i=1 %to %sysfunc(countw(&num_vars.));
             %let next_name = %scan(&num_vars., &i);
             &next_name._ .
         %end;
+        %if %sysevalf(%superq(char_vars)^=,boolean) %then %do;
         %do i=1 %to %sysfunc(countw(&char_vars.));
                 %let next_name = %scan(&char_vars., &i);
                 &next_name._ ''
-        %end;;
+        %end;%end;;
     set &b.(in=b keep=&idvar. &datevar. &num_vars. &char_vars.)
         &a.(in=a);
     by &idvar. &datevar.;
@@ -97,14 +99,14 @@ data &merged.;
         %do i=1 %to %sysfunc(countw(&num_vars.));
             %let next_name = %scan(&num_vars., &i);
             &next_name._=.;
-            %end;
-        %if %sysevalf(%superq(char_vars)=,boolean) %then %do;
-        %end;%else %do;
+        %end;
+    %if %sysevalf(%superq(char_vars)^=,boolean) %then %do;
 	%do i=1 %to %sysfunc(countw(&char_vars.));
             %let next_name = %scan(&char_vars., &i);
             &next_name._='';
-        %end;%end;
-    end;    
+        %end;
+    %end;
+    end;
     %do i=1 %to %sysfunc(countw(&num_vars. &char_vars.));
         %let next_name = %scan(&num_vars. &char_vars., &i);
         if not missing(&next_name.) then &next_name._=&next_name.;
@@ -115,6 +117,3 @@ data &merged.;
     if a then output;
 run;
 %MEND;
-%MERGE_ASOF(a=,b=,
-    merged=,
-    num_vars=);
