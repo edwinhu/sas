@@ -39,10 +39,12 @@ data _ncols;
 set _null_;
 retain &num_vars. .;
 run;
+%if %sysevalf(%superq(char_vars)^=,boolean) %then %do;
 data _ccols;
 set _null_;
 retain &char_vars. '';
 run;
+%end;
 proc sql noprint;
     select a.length
     into :nlen separated by ' '
@@ -55,6 +57,7 @@ proc sql noprint;
     and upcase(b.libname)=upcase("&lib.")
     and upcase(b.memname)="_NCOLS"
     ;
+    %if %sysevalf(%superq(char_vars)^=,boolean) %then %do;
     select a.length
     into :clen separated by ' '
     from dictionary.columns a
@@ -65,6 +68,7 @@ proc sql noprint;
     and upcase(a.memname)=upcase("&b.")
     and upcase(b.libname)=upcase("&lib.")
     and upcase(b.memname)="_CCOLS"
+    %end;
     ;
 quit; 
 data &merged.;
