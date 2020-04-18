@@ -106,17 +106,20 @@ A collection of event study macros adapted from WRDS.
         by edate;
     run;
     %put;%put ### DONE! ###;
-
+    
     /*If primary identifier is Cusip, then link in permno*/
     %if %lowcase(&idvar.)=cusip %then %do;
     proc sql;
         create view  _link
         as select permno, ncusip,
-        min(namedt) as fdate format=yymmdd10., max(nameendt) as ldate format=yymmdd10.
+        shrcd, exchcd,    
+        min(namedt) as fdate format=yymmdd10.,
+        max(nameendt) as ldate format=yymmdd10.
         from &crsp..&s.senames
-        group by permno, ncusip;
+        group by permno, ncusip, shrcd, exchcd;
         create table _temp
-        as select distinct b.permno, a.*
+        as select distinct b.permno, a.*,
+        b.shrcd, b.exchcd
         from &prefix._events a left join _link b
         on substr(a.cusip,1,6)=substr(b.ncusip,1,6) and b.fdate<=a.&datevar.<=b.ldate
         order by a.&datevar.;
