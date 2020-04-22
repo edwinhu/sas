@@ -74,10 +74,9 @@ PROC SQL;
     ORDER BY permno, CALCULATED date;
 QUIT;
 
-%if &dsetin.=comp.funda %then %do;
 proc printto log=junk new;run;
 /* Compute Book Equity */
-data &outlib...&dsetout.;
+data &outlib..&dsetout.;
     set compx;
     /* See Davis, Fama , French (2002) for a complete description */
     /* Preferred Stock Equity is measured as redemption, liquidation, or par value */
@@ -103,13 +102,7 @@ data &outlib...&dsetout.;
         PSTKRV PSTKL PSTK TXDITC TXDB SEQ CEQ CEQL CSHPRI PRCC_F
         PS DEFTX SHE;
 run;
-%put ### DONE! ###;
 proc printto;run;
-%end;%else %do;
-data out.&dsetout.;
-    set compx;
-run;
-%end;
 OPTIONS NOTES;
 %PUT ### DONE CC_LINK ###;
 %MEND CC_LINK;
