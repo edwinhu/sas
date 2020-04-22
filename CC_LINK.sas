@@ -59,7 +59,7 @@ PROC SQL;
         ATQ LTQ IBQ RDQ
         %end;        
         ) AS a, 
-    crspm.ccmxpf_linktable AS b
+    crsp.ccmxpf_linktable AS b
     WHERE a.indfmt = 'INDL'
     AND a.datafmt = 'STD'
     AND a.popsrc = 'D'
