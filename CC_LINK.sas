@@ -31,6 +31,7 @@ enough for specific paper replications (e.g., FF93)
 */
 
 %MACRO CC_LINK(dsetin=comp.funda,
+               outlib=USER,
                dsetout=compx,
                datevar=datadate,
                keep_vars=);
@@ -76,7 +77,7 @@ QUIT;
 %if &dsetin.=comp.funda %then %do;
 proc printto log=junk new;run;
 /* Compute Book Equity */
-data out.&dsetout.;
+data &outlib...&dsetout.;
     set compx;
     /* See Davis, Fama , French (2002) for a complete description */
     /* Preferred Stock Equity is measured as redemption, liquidation, or par value */
