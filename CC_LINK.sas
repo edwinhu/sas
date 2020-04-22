@@ -58,14 +58,9 @@ PROC SQL;
         %if &dsetin.=comp.fundq %then %do;
         ATQ LTQ IBQ RDQ
         %end;        
-<<<<<<< HEAD
-        ) AS a, crsp.ccmxpf_linktable AS b
-    WHERE a.indfmt IN ('INDL','BANK','UTIL')
-=======
         ) AS a, 
     crspm.ccmxpf_linktable AS b
     WHERE a.indfmt = 'INDL'
->>>>>>> 282d602362944b4003dc53c297f2cdbbd6b42f2b
     AND a.datafmt = 'STD'
     AND a.popsrc = 'D'
     AND a.consol = 'C'
