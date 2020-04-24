@@ -118,7 +118,6 @@ decme (keep = permno date ME rename=(me=DEC_ME) )  ;
      set crspm2a;
  by permno date;
  retain weight_port cumretx me_base;
- Lpermno=lag(permno);
  LME=lag(me);
      if first.permno then do;
      LME=me/(1+retx); cumretx=sum(1,retx); me_base=LME;weight_port=.;end;
