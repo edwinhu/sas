@@ -36,8 +36,6 @@ enough for specific paper replications (e.g., FF93)
                datevar=datadate,
                keep_vars=);
 
-OPTIONS NONOTES;
-
 /* If PERMNO is the primary key, then the CRSP Manual recommends              */
 /* forming GVKEY-PERMNO links where the USEDFLAG=1, which is unique           */
 /* See: http://www.crsp.chicagobooth.edu/documentation/product/ccm/crsp_link/ */
@@ -74,10 +72,11 @@ PROC SQL;
     ORDER BY permno, CALCULATED date;
 QUIT;
 
-proc printto log=junk new;run;
+proc printto log='/dev/null';run;
 /* Compute Book Equity */
 data &outlib..&dsetout.;
     set compx;
+%if &dsetin.=comp.funda %then %do;
     /* See Davis, Fama , French (2002) for a complete description */
     /* Preferred Stock Equity is measured as redemption, liquidation, or par value */
     PS = coalesce(PSTKRV,PSTKL,PSTK,0);
@@ -101,8 +100,11 @@ data &outlib..&dsetout.;
     drop INDFMT DATAFMT CONSOL POPSRC
         PSTKRV PSTKL PSTK TXDITC TXDB SEQ CEQ CEQL CSHPRI PRCC_F
         PS DEFTX SHE;
+%end;
 run;
 proc printto;run;
-OPTIONS NOTES;
+proc datasets nolist;
+    contents data=&outlib..&dsetout.;
+run;quit;
 %PUT ### DONE CC_LINK ###;
 %MEND CC_LINK;
