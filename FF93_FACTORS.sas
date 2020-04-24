@@ -13,7 +13,7 @@ Runs on WRDS Cloud
 */
 
 %let comp=comp;
-%let crsp=crspm;
+%let crsp=crsp;
 
 %let begdate=01jan1975;
 %let enddate=31dec2019;
@@ -310,17 +310,17 @@ run;
 /************************ Part 7: Check Correlations ************************/
 
 proc sql;
-	create table ff_merged as
-	select a.*, WHML, WSMB
-	from ff.factors_monthly as a
-	inner join out.ff_factors as b
-	on a.dateff = b.date
-	;
+    create table ff_merged as
+    select a.*, WHML, WSMB
+    from ff.factors_monthly as a
+    inner join out.ff_factors as b
+    on a.dateff = b.date
+    ;
 quit;
 
 proc corr data=ff_merged nosimple;
-	var smb hml;
-	with WSMB WHML;
+    var smb hml;
+    with WSMB WHML;
 run;
 
 /* Clean house*/
