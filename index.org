@@ -1,8 +1,8 @@
 #+TITLE: SAS Macros
 #+AUTHOR: Edwin Hu
 #+DATE: {{{time(%Y-%m-%d)}}}
-#+OPTIONS: author:t creator:t timestamp:nil toc:2 num:nil
-#+CREATOR: The Securities and Exchange Commission disclaims responsibility for any private publication or statement of any SEC employee or Commissioner. This webpage expresses the author's views and does not necessariliy reflect those of the Commission, the Commissioners, or members of the staff.
+#+OPTIONS: author:t creator:t timestamp:nil toc:2 num:nil ^:nil
+#+CREATOR: 
 #+HTML_HEAD_EXTRA: <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67919104-1"></script>
 #+HTML_HEAD_EXTRA: <script>
 #+HTML_HEAD_EXTRA:   window.dataLayer = window.dataLayer || [];
@@ -71,17 +71,21 @@ CRSP PERMNOs. Makes a file ~comp_ead_events~.
     );
 #+END_SRC
 
-* TAQ
-:PROPERTIES:
-:CUSTOM_ID: taq
-:END:
-
-** Coming soon
 
 * Utilities
 :PROPERTIES:
 :CUSTOM_ID: util
 :END:
+
+** [[https://github.com/edwinhu/sas/blob/master/FF93_FACTORS.sas][FF93_FACTORS]]
+:PROPERTIES:
+:CUSTOM_ID: ff93
+:END:
+
+Replicates Fama-French (1993) SMB & HML Factors. Currently obtaining
+correlations of 99.5% (SMB) 97.8% (HML) for sample period 1975 to 2019.
+
+Also useful in case you want to get the breakpoints or portfolio compositions.
 
 ** [[https://github.com/edwinhu/sas/blob/master/EVENT_MACROS.sas][EVENT_MACROS]]
 :PROPERTIES:
@@ -138,6 +142,7 @@ See, e.g., [[https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.m
 - merged: output merged dataset
 - idvar: firm identifier (permno)
 - datevar: date variable to use (date)
+- sort_statement: defaults to ~idvar datevar~ but can be customized
 - num_vars: numeric variables from b to merge in
 - char_vars: character variables from b to merge in
 

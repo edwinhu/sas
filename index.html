@@ -236,8 +236,8 @@ appropriate PERMNOs. This handles a lot of silly merge issues.
 
 <div class="org-src-container">
 
-<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/CC_LINK.sas"</span>;
-<span style="color: #006699;">%CC_LINK(</span>dsetin=&amp;syslast.,
+<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/CC_LINK.sas"</span>;
+<span style="color: #D9DAA2;">%CC_LINK(</span>dsetin=&amp;syslast.,
     dsetout=compx,
     datevar=datadate,
     keep_vars=);
@@ -269,14 +269,14 @@ CRSP PERMNOs. Makes a file <code>comp_ead_events</code>.
 
 <div class="org-src-container">
 
-<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/COMP_EAD.sas"</span>;
-<span style="color: #006699;">%COMP_EAD(</span>comp_vars=gvkey fyearq fqtr conm datadate rdq
+<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/COMP_EAD.sas"</span>;
+<span style="color: #D9DAA2;">%COMP_EAD(</span>comp_vars=gvkey fyearq fqtr conm datadate rdq
     epsfxq epspxq
     prccq ajexq
     spiq cshoq cshprq cshfdq
     saleq atq
     fyr datafqtr,
-    filter=<span style="color: #0000FF;">not</span> <span style="color: #0000FF;">missing</span>(saleq) or atq&gt;0
+    filter=<span style="color: #339CDB;">not</span> <span style="color: #339CDB;">missing</span>(saleq) or atq&gt;<span style="color: #B5CEA8; font-weight: bold;">0</span>
     );
 </pre>
 </div>
@@ -284,19 +284,24 @@ CRSP PERMNOs. Makes a file <code>comp_ead_events</code>.
 </div>
 </div>
 
-<div id="outline-container-taq" class="outline-2">
-<h2 id="taq"><a id="sec-" name="sec-"></a>TAQ</h2>
-<div class="outline-text-2" id="text-taq">
-</div>
-
-<div id="outline-container-sec-" class="outline-3">
-<h3 id="sec-">Coming soon</h3>
-</div>
-</div>
 
 <div id="outline-container-util" class="outline-2">
 <h2 id="util"><a id="sec-" name="sec-"></a>Utilities</h2>
 <div class="outline-text-2" id="text-util">
+</div>
+
+<div id="outline-container-ff93" class="outline-3">
+<h3 id="ff93"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/FF93_FACTORS.sas">FF93_FACTORS</a></h3>
+<div class="outline-text-3" id="text-ff93">
+<p>
+Replicates Fama-French (1993) SMB &amp; HML Factors. Currently obtaining
+correlations of 99.5% (SMB) 97.8% (HML) for sample period 1975 to 2019.
+</p>
+
+<p>
+Also useful in case you want to get the breakpoints or portfolio compositions.
+</p>
+</div>
 </div>
 
 <div id="outline-container-event" class="outline-3">
@@ -325,22 +330,22 @@ data with abnormal returns.
 
 <div class="org-src-container">
 
-<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/EVENT_MACROS.sas"</span>;
-<span style="color: #006699;">%EVENT_SETUP(</span>pref=,
+<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/EVENT_MACROS.sas"</span>;
+<span style="color: #D9DAA2;">%EVENT_SETUP(</span>pref=,
     crsp_lib=crspm,
     frequency=d,
     date_var=event_date,
     id_var=permno,
-    <span style="color: #0000FF;">model</span>=ffm,
+    <span style="color: #339CDB;">model</span>=ffm,
     ret_var=retx,
-    est_per=252, gap_win=30,
-    beg_win=-30, end_win=120
+    est_per=<span style="color: #B5CEA8; font-weight: bold;">252</span>, gap_win=<span style="color: #B5CEA8; font-weight: bold;">30</span>,
+    beg_win=-<span style="color: #B5CEA8; font-weight: bold;">30</span>, end_win=<span style="color: #B5CEA8; font-weight: bold;">120</span>
     );
-<span style="color: #006699;">%EVENT_EXPAND(</span>lib=user, debug = n);
-<span style="color: #006699;">%EVENT_STATS(</span>prefix = ,
+<span style="color: #D9DAA2;">%EVENT_EXPAND(</span>lib=user, debug = n);
+<span style="color: #D9DAA2;">%EVENT_STATS(</span>prefix = ,
     dsetin = ,
     group = ,
-    filter = <span style="color: #0000FF;">and</span> shrcd in (10,11) <span style="color: #0000FF;">and</span> exchcd in (1,2,3),
+    filter = <span style="color: #339CDB;">and</span> shrcd in (<span style="color: #B5CEA8; font-weight: bold;">10</span>,<span style="color: #B5CEA8; font-weight: bold;">11</span>) <span style="color: #339CDB;">and</span> exchcd in (<span style="color: #B5CEA8; font-weight: bold;">1</span>,<span style="color: #B5CEA8; font-weight: bold;">2</span>,<span style="color: #B5CEA8; font-weight: bold;">3</span>),
     debug= = n
     );
 </pre>
@@ -353,7 +358,7 @@ data with abnormal returns.
 <h3 id="asof"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/MERGE_ASOF.sas">MERGE_ASOF</a></h3>
 <div class="outline-text-3" id="text-asof">
 <p>
-Does an as-of or "window" merge, e.g., COMPUSTAT yearly with CRSP
+Does an as-of or &ldquo;window&rdquo; merge, e.g., COMPUSTAT yearly with CRSP
 monthly, or TAQ quotes with TAQ trades.
 </p>
 
@@ -372,6 +377,8 @@ See, e.g., <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/p
 </li>
 <li>datevar: date variable to use (date)
 </li>
+<li>sort_statement: defaults to <code>idvar datevar</code> but can be customized
+</li>
 <li>num_vars: numeric variables from b to merge in
 </li>
 <li>char_vars: character variables from b to merge in
@@ -380,8 +387,8 @@ See, e.g., <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/p
 
 <div class="org-src-container">
 
-<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/MERGE_ASOF.sas"</span>;
-<span style="color: #006699;">%MERGE_ASOF(</span>a=,b=,
+<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/MERGE_ASOF.sas"</span>;
+<span style="color: #D9DAA2;">%MERGE_ASOF(</span>a=,b=,
     merged=,
     num_vars=);
 </pre>
@@ -417,13 +424,13 @@ concurrent processes!
 
 <div class="org-src-container">
 
-<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/PARFOR"</span>;
-<span style="color: #D0372D;">%LET</span> FUNC = <span style="color: #006699;">%STR(</span>
-    <span style="color: #D0372D;">proc print</span> <span style="color: #0000FF;">data=</span>perf_&amp;yyyy.(obs=25);
-    <span style="color: #0000FF;">var</span> exret: ret:;
-    <span style="color: #D0372D;">run;</span>
+<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/PARFOR"</span>;
+<span style="color: #339CDB;">%LET</span> FUNC = <span style="color: #D9DAA2;">%STR(</span>
+    <span style="color: #339CDB;">proc print</span> <span style="color: #339CDB;">data=</span>perf_&amp;yyyy.(obs=<span style="color: #B5CEA8; font-weight: bold;">25</span>);
+    <span style="color: #339CDB;">var</span> exret: ret:;
+    <span style="color: #339CDB;">run;</span>
 );
-<span style="color: #006699;">%PARFOR(</span>FUNC=&amp;FUNC.);
+<span style="color: #D9DAA2;">%PARFOR(</span>FUNC=&amp;FUNC.);
 </pre>
 </div>
 </div>
@@ -462,8 +469,8 @@ specific task.
 
 <div class="org-src-container">
 
-<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/RESAMPLE.sas"</span>;
-<span style="color: #006699;">%RESAMPLE(</span>lib=sashelp, dsetin=citiyr, outfreq=monthly, idvar=, datevar=date);
+<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/RESAMPLE.sas"</span>;
+<span style="color: #D9DAA2;">%RESAMPLE(</span>lib=sashelp, dsetin=citiyr, outfreq=monthly, idvar=, datevar=date);
 </pre>
 </div>
 </div>
@@ -495,13 +502,13 @@ advantage of SAS SSCP matrices.
 
 <div class="org-src-container">
 
-<pre class="src src-sas"><span style="color: #D0372D;">%INCLUDE</span> <span style="color: #008000;">"~/git/sas/ROLL_REG.sas"</span>;
-<span style="color: #006699;">%ROLL_REG(</span>dsetin=,
-          <span style="color: #0000FF;">id</span>=permno,
+<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/ROLL_REG.sas"</span>;
+<span style="color: #D9DAA2;">%ROLL_REG(</span>dsetin=,
+          <span style="color: #339CDB;">id</span>=permno,
           date=date,
           y=exret,
           x=mktrf,
-          ws=60,
+          ws=<span style="color: #B5CEA8; font-weight: bold;">60</span>,
           debug=n);
 </pre>
 </div>
@@ -521,13 +528,9 @@ advantage of SAS SSCP matrices.
 <li><a href="#ead">COMP_EAD</a></li>
 </ul>
 </li>
-<li><a href="#taq">TAQ</a>
-<ul class="nav">
-<li><a href="#sec-">Coming soon</a></li>
-</ul>
-</li>
 <li><a href="#util">Utilities</a>
 <ul class="nav">
+<li><a href="#ff93">FF93_FACTORS</a></li>
 <li><a href="#event">EVENT_MACROS</a></li>
 <li><a href="#asof">MERGE_ASOF</a></li>
 <li><a href="#parfor">PARFOR</a></li>
@@ -540,9 +543,9 @@ advantage of SAS SSCP matrices.
 </nav>
 </div></div></div>
 <footer id="postamble" class="">
-<div><p class="date">Date: 2019-05-14</p>
+<div><p class="date">Date: 2020-04-27</p>
 <p class="author">Author: Edwin Hu</p>
-<p class="creator">The Securities and Exchange Commission disclaims responsibility for any private publication or statement of any SEC employee or Commissioner. This webpage expresses the author's views and does not necessariliy reflect those of the Commission, the Commissioners, or members of the staff.</p>
+<p class="creator"></p>
 </div>
 </footer>
 </body>
