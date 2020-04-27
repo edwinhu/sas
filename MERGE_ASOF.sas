@@ -31,10 +31,6 @@ Does an as-of or "window" merge
         datevar=date,
         num_vars=,
         char_vars=);
-proc sort data=&a.;
-    by &idvar. &datevar.;
-proc sort data=&b.;
-    by &idvar. &datevar.;
 data _ncols;
 set _null_;
 retain &num_vars. .;
