@@ -30,7 +30,8 @@ Does an as-of or "window" merge
         idvar=permno,
         datevar=date,
         num_vars=,
-        char_vars=);
+        char_vars=,
+        sort_statement=&idvar. &datevar.);
 data _ncols;
 set _null_;
 retain &num_vars. .;
@@ -94,7 +95,7 @@ data &merged.;
         %end;%end;;
     set &b.(in=b keep=&idvar. &datevar. &num_vars. &char_vars.)
         &a.(in=a);
-    by &idvar. &datevar.;
+    by &sort_statement.;
     if first.&idvar. then do;
         %do i=1 %to %sysfunc(countw(&num_vars.));
             %let next_name = %scan(&num_vars., &i);
