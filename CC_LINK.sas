@@ -49,13 +49,13 @@ PROC SQL;
         intnx('month',datadate,6,'E') as date
         FROM &dsetin.(keep=GVKEY &datevar.
         &keep_vars.
-        CUSIP CIK FYEAR
+        CUSIP CIK
         INDFMT DATAFMT CONSOL POPSRC
         %if &dsetin.=comp.funda %then %do;
-        PSTKRV PSTKL PSTK TXDITC TXDB SEQ CEQ CEQL AT LT CSHPRI PRCC_F GP
+        PSTKRV PSTKL PSTK TXDITC TXDB SEQ CEQ CEQL AT LT CSHPRI PRCC_F GP FYEAR
         %end;
         %if &dsetin.=comp.fundq %then %do;
-        ATQ LTQ IBQ RDQ
+        ATQ LTQ IBQ RDQ FYEARQ
         %end;        
         ) AS a, 
     crsp.ccmxpf_linktable AS b
@@ -76,7 +76,7 @@ proc printto log='/dev/null';run;
 /* Compute Book Equity */
 data &outlib..&dsetout.;
     set compx;
-%if &dsetin.=comp.funda %then %do;
+    %if &dsetin.=comp.funda %then %do;
     /* See Davis, Fama , French (2002) for a complete description */
     /* Preferred Stock Equity is measured as redemption, liquidation, or par value */
     PS = coalesce(PSTKRV,PSTKL,PSTK,0);
@@ -97,10 +97,12 @@ data &outlib..&dsetout.;
     format date yymmddn8.;
     if first.gvkey then count=1;
     else count+1;
+    %end;
     drop INDFMT DATAFMT CONSOL POPSRC
+    %if &dsetin.=comp.funda %then %do;
         PSTKRV PSTKL PSTK TXDITC TXDB SEQ CEQ CEQL CSHPRI PRCC_F
-        PS DEFTX SHE;
-%end;
+        PS DEFTX SHE
+    %end;;
 run;
 proc printto;run;
 proc datasets nolist;
