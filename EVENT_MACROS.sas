@@ -274,7 +274,7 @@ A collection of event study macros adapted from WRDS.
 *              group         = give summary stats by group
 *****************************************************************/
     %put; %put ### STEP 5. ESTIMATING FACTOR EXPOSURES OVER THE ESTIMATION PERIOD...;
-    proc printto log=junk new;run;
+    proc printto log='/dev/null' new;run;
     /*estimate risk factor exposures during the estimation period*/
     proc reg data=&data. edf outest=_params (rename=&newvars
         keep=event_id intercept &factors _rmse_  _p_ _edf_) noprint;
@@ -430,7 +430,7 @@ A collection of event study macros adapted from WRDS.
 
     /* Compute portfolio returns */
     %if %SUBSTR(%LOWCASE(&debug),1,1) = n %then %do;
-    proc printto log=junk new;run;
+    proc printto log='/dev/null' new;run;
     %end;
     proc sort data=&data.;by t;run;
     proc means data=&data. noprint;
@@ -448,7 +448,7 @@ A collection of event study macros adapted from WRDS.
 
     /* Compute BHAR and CAR */
     %if %SUBSTR(%LOWCASE(&debug),1,1) = n %then %do;
-    proc printto log=junk new;run;
+    proc printto log='/dev/null' new;run;
     %end;
     proc sort data=_port;
         by &group. t;
