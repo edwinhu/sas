@@ -57,7 +57,7 @@ proc sql noprint;
     ;
 quit;
 %if %sysevalf(%superq(char_vars)^=,boolean) %then %do;
-proc sql;
+proc sql NOPRINT;
     select compress(a.name)||"_ $"||compress(put(a.length,3.))||"."
     into :clen separated by ' '
     from dictionary.columns a
