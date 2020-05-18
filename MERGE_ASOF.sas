@@ -31,7 +31,8 @@ Does an as-of or "window" merge
         datevar=date,
         num_vars=,
         char_vars=,
-        sort_statement=&idvar. &datevar.);
+    sort_statement=&idvar. &datevar.);
+%local nlen clen;
 data _ncols;
 set _null_;
 retain &num_vars. .;
@@ -43,7 +44,7 @@ retain &char_vars. '';
 run;
 %end;
 proc sql noprint;
-    select a.length
+    select compress(a.name)||"_ "||compress(put(a.length,3.))||"."
     into :nlen separated by ' '
     from dictionary.columns a
     inner join
@@ -54,8 +55,10 @@ proc sql noprint;
     and upcase(b.libname)=upcase("&lib.")
     and upcase(b.memname)="_NCOLS"
     ;
-    %if %sysevalf(%superq(char_vars)^=,boolean) %then %do;
-    select a.length
+quit;
+%if %sysevalf(%superq(char_vars)^=,boolean) %then %do;
+proc sql;
+    select compress(a.name)||"_ $"||compress(put(a.length,3.))||"."
     into :clen separated by ' '
     from dictionary.columns a
     inner join
@@ -65,23 +68,11 @@ proc sql noprint;
     and upcase(a.memname)=upcase("&b.")
     and upcase(b.libname)=upcase("&lib.")
     and upcase(b.memname)="_CCOLS"
-    %end;
     ;
-quit; 
+quit;
+%end;
 data &merged.;
-    length 
-        %local i next_name;
-        %do i=1 %to %sysfunc(countw(&num_vars.));
-            %let next_name = %scan(&num_vars., &i);
-            %let next_len = %scan(&nlen., &i);
-            &next_name._ &next_len.
-        %end;
-        %if %sysevalf(%superq(char_vars)^=,boolean) %then %do;
-        %do i=1 %to %sysfunc(countw(&char_vars.));
-            %let next_name = %scan(&char_vars., &i);
-            %let next_len = %scan(&clen., &i);
-            &next_name._ $ &next_len.
-        %end;%end;;
+    length &nlen. &clen.;
     retain
         %local i next_name;
         %do i=1 %to %sysfunc(countw(&num_vars.));
