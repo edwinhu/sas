@@ -1,193 +1,198 @@
-<!doctype html>
-<html lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SAS Macros</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="generator" content="Org-mode">
-<meta name="author" content="Edwin Hu">
-
-<link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<meta name="author" content="Edwin Hu" />
+<meta name="generator" content="Org Mode" />
 <style type="text/css">
-/* org mode styles on top of twbs */
-
-html {
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
     position: relative;
-    min-height: 100%;
-}
-
-body {
-    font-size: 18px;
-    margin-bottom: 105px;
-}
-
-footer {
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 101px;
-    background-color: #f5f5f5;
-}
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
 
-footer > div {
-    padding: 10px;
-}
-
-footer p {
-    margin: 0 0 5px;
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
     text-align: center;
-    font-size: 16px;
-}
-
-#table-of-contents {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-blockquote p {
-    font-size: 18px;
-}
-
-pre {
-    font-size: 16px;
-}
-
-.footpara {
-    display: inline-block;
-}
-
-figcaption {
-  font-size: 16px;
-  color: #666;
-  font-style: italic;
-  padding-bottom: 15px;
-}
-
-/* from twbs docs */
-
-.bs-docs-sidebar.affix {
-    position: static;
-}
-@media (min-width: 768px) {
-    .bs-docs-sidebar {
-        padding-left: 20px;
-    }
-}
-
-/* All levels of nav */
-.bs-docs-sidebar .nav > li > a {
-    display: block;
-    padding: 4px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #999;
-}
-.bs-docs-sidebar .nav > li > a:hover,
-.bs-docs-sidebar .nav > li > a:focus {
-    padding-left: 19px;
-    color: #A1283B;
-    text-decoration: none;
-    background-color: transparent;
-    border-left: 1px solid #A1283B;
-}
-.bs-docs-sidebar .nav > .active > a,
-.bs-docs-sidebar .nav > .active:hover > a,
-.bs-docs-sidebar .nav > .active:focus > a {
-    padding-left: 18px;
-    font-weight: bold;
-    color: #A1283B;
-    background-color: transparent;
-    border-left: 2px solid #A1283B;
-}
-
-/* Nav: second level (shown on .active) */
-.bs-docs-sidebar .nav .nav {
-    display: none; /* Hide by default, but at >768px, show it */
-    padding-bottom: 10px;
-}
-.bs-docs-sidebar .nav .nav > li > a {
-    padding-top: 1px;
-    padding-bottom: 1px;
-    padding-left: 30px;
-    font-size: 12px;
-    font-weight: normal;
-}
-.bs-docs-sidebar .nav .nav > li > a:hover,
-.bs-docs-sidebar .nav .nav > li > a:focus {
-    padding-left: 29px;
-}
-.bs-docs-sidebar .nav .nav > .active > a,
-.bs-docs-sidebar .nav .nav > .active:hover > a,
-.bs-docs-sidebar .nav .nav > .active:focus > a {
-    padding-left: 28px;
-    font-weight: 500;
-}
-
-/* Nav: third level (shown on .active) */
-.bs-docs-sidebar .nav .nav .nav {
-    padding-bottom: 10px;
-}
-.bs-docs-sidebar .nav .nav .nav > li > a {
-    padding-top: 1px;
-    padding-bottom: 1px;
-    padding-left: 40px;
-    font-size: 12px;
-    font-weight: normal;
-}
-.bs-docs-sidebar .nav .nav .nav > li > a:hover,
-.bs-docs-sidebar .nav .nav .nav > li > a:focus {
-    padding-left: 39px;
-}
-.bs-docs-sidebar .nav .nav .nav > .active > a,
-.bs-docs-sidebar .nav .nav .nav > .active:hover > a,
-.bs-docs-sidebar .nav .nav .nav > .active:focus > a {
-    padding-left: 38px;
-    font-weight: 500;
-}
-
-/* Show and affix the side nav when space allows it */
-@media (min-width: 992px) {
-    .bs-docs-sidebar .nav > .active > ul {
-        display: block;
-    }
-    /* Widen the fixed sidebar */
-    .bs-docs-sidebar.affix,
-    .bs-docs-sidebar.affix-bottom {
-        width: 213px;
-    }
-    .bs-docs-sidebar.affix {
-        position: fixed; /* Undo the static from mobile first approach */
-        top: 20px;
-    }
-    .bs-docs-sidebar.affix-bottom {
-        position: absolute; /* Undo the static from mobile first approach */
-    }
-    .bs-docs-sidebar.affix .bs-docs-sidenav,.bs-docs-sidebar.affix-bottom .bs-docs-sidenav {
-        margin-top: 0;
-        margin-bottom: 0
-    }
-}
-@media (min-width: 1200px) {
-    /* Widen the fixed sidebar again */
-    .bs-docs-sidebar.affix-bottom,
-    .bs-docs-sidebar.affix {
-        width: 263px;
-    }
-}
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
 </style>
-<script type="text/javascript">
-$(function() {
-    'use strict';
-
-    $('.bs-docs-sidebar li').first().addClass('active');
-
-    $(document.body).scrollspy({target: '.bs-docs-sidebar'});
-
-    $('.bs-docs-sidebar').affix();
-});
-</script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-67919104-1"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67919104-1"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -195,10 +200,38 @@ gtag('js', new Date());
 gtag('config', 'UA-67919104-1');
 </script>
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="https://latex.vercel.app/style.css">
 </head>
 <body>
-<div id="content" class="container">
-<div class="row"><div class="col-md-9"><h1 class="title">SAS Macros</h1>
+<div id="content" class="content">
+<h1 class="title">SAS Macros</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#crsp">CRSP</a>
+<ul>
+<li><a href="#cclink">CC_LINK</a></li>
+</ul>
+</li>
+<li><a href="#comp">COMPUSTAT</a>
+<ul>
+<li><a href="#ead">COMP_EAD</a></li>
+</ul>
+</li>
+<li><a href="#util">Utilities</a>
+<ul>
+<li><a href="#ff93">FF93_FACTORS</a></li>
+<li><a href="#event">EVENT_MACROS</a></li>
+<li><a href="#asof">MERGE_ASOF</a></li>
+<li><a href="#parfor">PARFOR</a></li>
+<li><a href="#resample">RESAMPLE</a></li>
+<li><a href="#roll">ROLL_REG</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <p>
 A collection of SAS Macros that I frequently use and occasionally update. 
 </p>
@@ -206,14 +239,12 @@ A collection of SAS Macros that I frequently use and occasionally update.
 <p>
 The full repo can be found at <a href="http://github.com/edwinhu/sas">http://github.com/edwinhu/sas</a>
 </p>
-
 <div id="outline-container-crsp" class="outline-2">
-<h2 id="crsp"><a id="sec-" name="sec-"></a>CRSP</h2>
+<h2 id="crsp">CRSP</h2>
 <div class="outline-text-2" id="text-crsp">
 </div>
-
 <div id="outline-container-cclink" class="outline-3">
-<h3 id="cclink"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/CC_LINK.sas">CC_LINK</a></h3>
+<h3 id="cclink"><a href="https://github.com/edwinhu/sas/blob/master/CC_LINK.sas">CC_LINK</a></h3>
 <div class="outline-text-3" id="text-cclink">
 <p>
 Links COMPUSTAT GVKEYs to CRSP PERMNOs.
@@ -224,20 +255,15 @@ Takes a file which contains GVKEYs and dates and merges in the
 appropriate PERMNOs. This handles a lot of silly merge issues.
 </p>
 <ul class="org-ul">
-<li>dsetin: Input Dataset
-</li>
-<li>dsetout: Output Dataset Name, default compx
-</li>
-<li>datevar: date variable to use (datadate, rdq)
-</li>
-<li>keep_vars: variables to keep
-</li>
+<li>dsetin: Input Dataset</li>
+<li>dsetout: Output Dataset Name, default compx</li>
+<li>datevar: date variable to use (datadate, rdq)</li>
+<li>keep_vars: variables to keep</li>
 </ul>
 
 <div class="org-src-container">
-
-<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/CC_LINK.sas"</span>;
-<span style="color: #D9DAA2;">%CC_LINK(</span>dsetin=&amp;syslast.,
+<pre class="src src-sas">%INCLUDE "~/git/sas/CC_LINK.sas";
+%CC_LINK(dsetin=&amp;syslast.,
     dsetout=compx,
     datevar=datadate,
     keep_vars=);
@@ -246,52 +272,43 @@ appropriate PERMNOs. This handles a lot of silly merge issues.
 </div>
 </div>
 </div>
-
-
 <div id="outline-container-comp" class="outline-2">
-<h2 id="comp"><a id="sec-" name="sec-"></a>COMPUSTAT</h2>
+<h2 id="comp">COMPUSTAT</h2>
 <div class="outline-text-2" id="text-comp">
 </div>
-
 <div id="outline-container-ead" class="outline-3">
-<h3 id="ead"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/COMP_EAD.sas">COMP_EAD</a></h3>
+<h3 id="ead"><a href="https://github.com/edwinhu/sas/blob/master/COMP_EAD.sas">COMP_EAD</a></h3>
 <div class="outline-text-3" id="text-ead">
 <p>
 Gets quarterly earnings announcement dates from COMPUSTAT and fetches
 CRSP PERMNOs. Makes a file <code>comp_ead_events</code>.
 </p>
 <ul class="org-ul">
-<li>comp_vars: list of COMPUSTAT variables to fetch
-</li>
-<li>filter: filters to place on COMPUSTAT quarterly
-</li>
+<li>comp_vars: list of COMPUSTAT variables to fetch</li>
+<li>filter: filters to place on COMPUSTAT quarterly</li>
 </ul>
 
 <div class="org-src-container">
-
-<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/COMP_EAD.sas"</span>;
-<span style="color: #D9DAA2;">%COMP_EAD(</span>comp_vars=gvkey fyearq fqtr conm datadate rdq
+<pre class="src src-sas">%INCLUDE "~/git/sas/COMP_EAD.sas";
+%COMP_EAD(comp_vars=gvkey fyearq fqtr conm datadate rdq
     epsfxq epspxq
     prccq ajexq
     spiq cshoq cshprq cshfdq
     saleq atq
     fyr datafqtr,
-    filter=<span style="color: #339CDB;">not</span> <span style="color: #339CDB;">missing</span>(saleq) or atq&gt;<span style="color: #B5CEA8; font-weight: bold;">0</span>
+    filter=not missing(saleq) or atq&gt;0
     );
 </pre>
 </div>
 </div>
 </div>
 </div>
-
-
 <div id="outline-container-util" class="outline-2">
-<h2 id="util"><a id="sec-" name="sec-"></a>Utilities</h2>
+<h2 id="util">Utilities</h2>
 <div class="outline-text-2" id="text-util">
 </div>
-
 <div id="outline-container-ff93" class="outline-3">
-<h3 id="ff93"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/FF93_FACTORS.sas">FF93_FACTORS</a></h3>
+<h3 id="ff93"><a href="https://github.com/edwinhu/sas/blob/master/FF93_FACTORS.sas">FF93_FACTORS</a></h3>
 <div class="outline-text-3" id="text-ff93">
 <p>
 Replicates Fama-French (1993) SMB &amp; HML Factors. Currently obtaining
@@ -303,9 +320,8 @@ Also useful in case you want to get the breakpoints or portfolio compositions.
 </p>
 </div>
 </div>
-
 <div id="outline-container-event" class="outline-3">
-<h3 id="event"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/EVENT_MACROS.sas">EVENT_MACROS</a></h3>
+<h3 id="event"><a href="https://github.com/edwinhu/sas/blob/master/EVENT_MACROS.sas">EVENT_MACROS</a></h3>
 <div class="outline-text-3" id="text-event">
 <p>
 A collection of event study macros adapted from WRDS.
@@ -329,33 +345,30 @@ data with abnormal returns.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/EVENT_MACROS.sas"</span>;
-<span style="color: #D9DAA2;">%EVENT_SETUP(</span>pref=,
+<pre class="src src-sas">%INCLUDE "~/git/sas/EVENT_MACROS.sas";
+%EVENT_SETUP(pref=,
     crsp_lib=crspm,
     frequency=d,
     date_var=event_date,
     id_var=permno,
-    <span style="color: #339CDB;">model</span>=ffm,
+    model=ffm,
     ret_var=retx,
-    est_per=<span style="color: #B5CEA8; font-weight: bold;">252</span>, gap_win=<span style="color: #B5CEA8; font-weight: bold;">30</span>,
-    beg_win=-<span style="color: #B5CEA8; font-weight: bold;">30</span>, end_win=<span style="color: #B5CEA8; font-weight: bold;">120</span>
+    est_per=252, gap_win=30,
+    beg_win=-30, end_win=120
     );
-<span style="color: #D9DAA2;">%EVENT_EXPAND(</span>lib=user, debug = n);
-<span style="color: #D9DAA2;">%EVENT_STATS(</span>prefix = ,
+%EVENT_EXPAND(lib=user, debug = n);
+%EVENT_STATS(prefix = ,
     dsetin = ,
     group = ,
-    filter = <span style="color: #339CDB;">and</span> shrcd in (<span style="color: #B5CEA8; font-weight: bold;">10</span>,<span style="color: #B5CEA8; font-weight: bold;">11</span>) <span style="color: #339CDB;">and</span> exchcd in (<span style="color: #B5CEA8; font-weight: bold;">1</span>,<span style="color: #B5CEA8; font-weight: bold;">2</span>,<span style="color: #B5CEA8; font-weight: bold;">3</span>),
+    filter = and shrcd in (10,11) and exchcd in (1,2,3),
     debug= = n
     );
 </pre>
 </div>
 </div>
 </div>
-
-
 <div id="outline-container-asof" class="outline-3">
-<h3 id="asof"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/MERGE_ASOF.sas">MERGE_ASOF</a></h3>
+<h3 id="asof"><a href="https://github.com/edwinhu/sas/blob/master/MERGE_ASOF.sas">MERGE_ASOF</a></h3>
 <div class="outline-text-3" id="text-asof">
 <p>
 Does an as-of or &ldquo;window&rdquo; merge, e.g., COMPUSTAT yearly with CRSP
@@ -367,37 +380,27 @@ See, e.g., <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/p
 </p>
 
 <ul class="org-ul">
-<li>a: dataset a
-</li>
-<li>b: dataset b
-</li>
-<li>merged: output merged dataset
-</li>
-<li>idvar: firm identifier (permno)
-</li>
-<li>datevar: date variable to use (date)
-</li>
-<li>sort_statement: defaults to <code>idvar datevar</code> but can be customized
-</li>
-<li>num_vars: numeric variables from b to merge in
-</li>
-<li>char_vars: character variables from b to merge in
-</li>
+<li>a: dataset a</li>
+<li>b: dataset b</li>
+<li>merged: output merged dataset</li>
+<li>idvar: firm identifier (permno)</li>
+<li>datevar: date variable to use (date)</li>
+<li>sort_statement: defaults to <code>idvar datevar</code> but can be customized</li>
+<li>num_vars: numeric variables from b to merge in</li>
+<li>char_vars: character variables from b to merge in</li>
 </ul>
 
 <div class="org-src-container">
-
-<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/MERGE_ASOF.sas"</span>;
-<span style="color: #D9DAA2;">%MERGE_ASOF(</span>a=,b=,
+<pre class="src src-sas">%INCLUDE "~/git/sas/MERGE_ASOF.sas";
+%MERGE_ASOF(a=,b=,
     merged=,
     num_vars=);
 </pre>
 </div>
 </div>
 </div>
-
 <div id="outline-container-parfor" class="outline-3">
-<h3 id="parfor"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/PARFOR.sas">PARFOR</a></h3>
+<h3 id="parfor"><a href="https://github.com/edwinhu/sas/blob/master/PARFOR.sas">PARFOR</a></h3>
 <div class="outline-text-3" id="text-parfor">
 <p>
 A parallel FOR loop SAS Macro.
@@ -423,21 +426,19 @@ concurrent processes!
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/PARFOR"</span>;
-<span style="color: #339CDB;">%LET</span> FUNC = <span style="color: #D9DAA2;">%STR(</span>
-    <span style="color: #339CDB;">proc print</span> <span style="color: #339CDB;">data=</span>perf_&amp;yyyy.(obs=<span style="color: #B5CEA8; font-weight: bold;">25</span>);
-    <span style="color: #339CDB;">var</span> exret: ret:;
-    <span style="color: #339CDB;">run;</span>
+<pre class="src src-sas">%INCLUDE "~/git/sas/PARFOR";
+%LET FUNC = %STR(
+    proc print data=perf_&amp;yyyy.(obs=25);
+    var exret: ret:;
+    run;
 );
-<span style="color: #D9DAA2;">%PARFOR(</span>FUNC=&amp;FUNC.);
+%PARFOR(FUNC=&amp;FUNC.);
 </pre>
 </div>
 </div>
 </div>
-
 <div id="outline-container-resample" class="outline-3">
-<h3 id="resample"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/RESAMPLE.sas">RESAMPLE</a></h3>
+<h3 id="resample"><a href="https://github.com/edwinhu/sas/blob/master/RESAMPLE.sas">RESAMPLE</a></h3>
 <div class="outline-text-3" id="text-resample">
 <p>
 Resample and forward-fill data from low to high frequency Commonly
@@ -447,106 +448,59 @@ specific task.
 </p>
 
 <ul class="org-ul">
-<li>lib: input dataset library
-</li>
-<li>dsetin: input dataset
-</li>
-<li>dsetout: output (resampled) dataset
-</li>
-<li>datevar: date variable to resample
-</li>
-<li>idvar: group by id variable
-</li>
-<li>infreq: input frequency
-</li>
-<li>outfreq: output (higher) frequency
-</li>
-<li>alignment: date alignment (E,S,B)
-</li>
-<li>debug: keep or delete temporary datasets
-</li>
+<li>lib: input dataset library</li>
+<li>dsetin: input dataset</li>
+<li>dsetout: output (resampled) dataset</li>
+<li>datevar: date variable to resample</li>
+<li>idvar: group by id variable</li>
+<li>infreq: input frequency</li>
+<li>outfreq: output (higher) frequency</li>
+<li>alignment: date alignment (E,S,B)</li>
+<li>debug: keep or delete temporary datasets</li>
 </ul>
 
 <div class="org-src-container">
-
-<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/RESAMPLE.sas"</span>;
-<span style="color: #D9DAA2;">%RESAMPLE(</span>lib=sashelp, dsetin=citiyr, outfreq=monthly, idvar=, datevar=date);
+<pre class="src src-sas">%INCLUDE "~/git/sas/RESAMPLE.sas";
+%RESAMPLE(lib=sashelp, dsetin=citiyr, outfreq=monthly, idvar=, datevar=date);
 </pre>
 </div>
 </div>
 </div>
-
 <div id="outline-container-roll" class="outline-3">
-<h3 id="roll"><a id="sec-" name="sec-"></a><a href="https://github.com/edwinhu/sas/blob/master/ROLL_REG.sas">ROLL_REG</a></h3>
+<h3 id="roll"><a href="https://github.com/edwinhu/sas/blob/master/ROLL_REG.sas">ROLL_REG</a></h3>
 <div class="outline-text-3" id="text-roll">
 <p>
 Runs rolling regressions in a computationally efficient way, taking
 advantage of SAS SSCP matrices.
 </p>
 <ul class="org-ul">
-<li>dsetin: input dataset
-</li>
-<li>id: id variable
-</li>
-<li>date: date variable
-</li>
-<li>y: dependent variable
-</li>
-<li>x: independent variable
-</li>
-<li>ws: window size
-</li>
-<li>debug: debug mode (n)
-</li>
+<li>dsetin: input dataset</li>
+<li>id: id variable</li>
+<li>date: date variable</li>
+<li>y: dependent variable</li>
+<li>x: independent variable</li>
+<li>ws: window size</li>
+<li>debug: debug mode (n)</li>
 </ul>
 
 <div class="org-src-container">
-
-<pre class="src src-sas"><span style="color: #339CDB;">%INCLUDE</span> <span style="color: #DB8E73;">"~/git/sas/ROLL_REG.sas"</span>;
-<span style="color: #D9DAA2;">%ROLL_REG(</span>dsetin=,
-          <span style="color: #339CDB;">id</span>=permno,
+<pre class="src src-sas">%INCLUDE "~/git/sas/ROLL_REG.sas";
+%ROLL_REG(dsetin=,
+          id=permno,
           date=date,
           y=exret,
           x=mktrf,
-          ws=<span style="color: #B5CEA8; font-weight: bold;">60</span>,
+          ws=60,
           debug=n);
 </pre>
 </div>
 </div>
 </div>
 </div>
-</div><div class="col-md-3"><nav id="table-of-contents">
-<div id="text-table-of-contents" class="bs-docs-sidebar">
-<ul class="nav">
-<li><a href="#crsp">CRSP</a>
-<ul class="nav">
-<li><a href="#cclink">CC_LINK</a></li>
-</ul>
-</li>
-<li><a href="#comp">COMPUSTAT</a>
-<ul class="nav">
-<li><a href="#ead">COMP_EAD</a></li>
-</ul>
-</li>
-<li><a href="#util">Utilities</a>
-<ul class="nav">
-<li><a href="#ff93">FF93_FACTORS</a></li>
-<li><a href="#event">EVENT_MACROS</a></li>
-<li><a href="#asof">MERGE_ASOF</a></li>
-<li><a href="#parfor">PARFOR</a></li>
-<li><a href="#resample">RESAMPLE</a></li>
-<li><a href="#roll">ROLL_REG</a></li>
-</ul>
-</li>
-</ul>
 </div>
-</nav>
-</div></div></div>
-<footer id="postamble" class="">
-<div><p class="date">Date: 2020-04-27</p>
+<div id="postamble" class="status">
+<p class="date">Date: 2025-05-27</p>
 <p class="author">Author: Edwin Hu</p>
-<p class="creator"></p>
 </div>
-</footer>
 </body>
 </html>

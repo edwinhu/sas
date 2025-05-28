@@ -11,6 +11,7 @@
 #+HTML_HEAD_EXTRA:   gtag('config', 'UA-67919104-1');
 #+HTML_HEAD_EXTRA: </script>
 #+HTML_HEAD_EXTRA: <link rel="icon" href="favicon.ico" type="image/x-icon" />
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="https://latex.vercel.app/style.css">
 
 A collection of SAS Macros that I frequently use and occasionally update. 
 
